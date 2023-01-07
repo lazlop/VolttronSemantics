@@ -1,3 +1,7 @@
+#added files
+d2.sh
+
+# template 
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -1,0 +1,100 @@
+# Zone Level Semantic Model
+zls: "Zone Semantic Model" {
+    'style': {}
+}
+zls.bi: "Building Information" {
+    'style': {}
+    'ex': |
+        Add in building information. Information required may be  
+        application specific. At least the building name is required
+
+        Information required:
+         - Name 
+         - URI
+         - (Optional) Information about campus, location, etc. 
+         - (Optional) Information about physical spaces
+    |
+}
+zls.ri: " (Optional) Physical Information" {
+    'style': {}
+    'ex': |
+        Add in information about the pertinant physical spaces  
+        This is completely optional. If necessary, create 
+        relationships between floors and rooms
+
+        Information required:
+         - Name 
+         - URI
+         - (Optional) Relationships between physical spaces 
+    |
+}
+
+zls.zi: "Zone Information" {
+    'style': {}
+    'ex': |
+        create a zone level semantic model. This may be as simple  
+        as a list of zones with their names, if there is no interest in  
+        modeling the relationships between zones or physical spaces  
+
+        Information required:
+         - Name 
+         - URI
+         - (Optional) reference to other zones
+    |
+}
+
+zls.bi -> zls.zi 
+zls.bi -> zls.ri 
+zls.ri <- zls.zi
+
+Device Config Process.dlist: "Top Level Equipment" {
+    'style': {}
+    'ex': |
+        Create equipment (eg: AHU, Heat-Pump, etc.)
+        
+        Information required: 
+         - URI
+         - Name
+         - Device Config File
+         - Zone Served, reference to URI for zone 
+         - Point list (csv of points and details)
+         - (Optional) reference to other equipments
+    | 
+}
+
+Device Config Process.ce: "Contained Equipment" {
+    'style':{}
+    'ex': |
+        Create sub-level equipment (eg:Fans, Heating/Cooling Coils)
+
+        Information required:
+         - Relationship and URI 
+         - Name
+         - URI
+         - Device Config File
+         - Point list (csv file)
+        |
+}
+
+Device Config Process.ce2: "Contained Equipment" {
+    'style':{}
+    'ex': |
+        Create sub-level equipment (eg:Fans, Heating/Cooling Coils)
+
+        Information required:
+         - Relationship and URI 
+         - Name
+         - URI
+         - Device Config File
+         - Point list (csv file)
+        |
+}
+
+Device Config Process.dlist -> Device Config Process.ce
+Device Config Process.dlist -> Device Config Process.ce2
+
+# Device Config Process.dlist -> zls.zi
+# Device Config Process.ce -> zls.zi
+# Device Config Process.ce2 -> zls.zi
+
+Device Config Process -> zls.zi

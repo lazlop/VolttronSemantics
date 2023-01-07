@@ -1,0 +1,117 @@
+direction: right
+
+pd: "Platform Driver"
+pd.driver1: "Sensibo Driver"
+sm.fcu1.s1: "Sensibo Device 1"
+sm.fcu2.s2: "Sensibo Device 2"
+sm.fcu3.s3: "Sensibo Device 3"
+pd.driver1 -> sm.fcu1.s1{
+    target-arrowhead {
+      shape: diamond
+    }
+  }
+pd.driver1 -> sm.fcu2.s2{
+    target-arrowhead {
+      shape: diamond
+    }
+  }
+pd.driver1 -> sm.fcu3.s3{
+    target-arrowhead {
+      shape: diamond
+    }
+  }
+
+pd.driver2: "Ecobee Driver"
+sm.fur1.e1: "Ecobee Device 1"
+sm.fur2.e2: "Ecobee Device 2"
+pd.driver2 -> sm.fur1.e1{
+    target-arrowhead {
+      shape: diamond
+    }
+  }
+pd.driver2 -> sm.fur2.e2{
+    target-arrowhead {
+      shape: diamond
+    }
+  }
+
+sm: "Semantic Model"
+sm.zn.of: "Office"
+sm.zn.adm: "Administrative Area"
+sm.zn: "Zone"
+
+sm.fcu1: "FCU1"
+sm.fcu2: "FCU2"
+sm.fcu3: "FCU3"
+
+sm.fur1: "Furnace 1"
+sm.fur2: "Furnace 2"
+
+sm.fcu1 -> sm.zn: "feeds"
+sm.fcu2 -> sm.zn: "feeds"
+
+sm.fcu3 -> sm.zn: "feeds"
+
+sm.fur1-> sm.zn: "feeds"
+sm.fur2 -> sm.zn: "feeds"
+
+# sm.fcu1 -> sm.zn.of: "feeds"
+# sm.fcu2 -> sm.zn.of: "feeds"
+
+# sm.fcu3 -> sm.zn.adm: "feeds"
+
+# sm.fur1-> sm.zn.of: "feeds"
+# sm.fur2 -> sm.zn.adm: "feeds"
+
+# sm.fcu1 -> sm.s1: "Metadata Relation" {
+#     target-arrowhead {
+#       shape: diamond
+#     }
+#   }
+# sm.fcu2 -> sm.s2: "Metadata Relation" {
+#     target-arrowhead {
+#       shape: diamond
+#     }
+#   }
+# sm.fcu3 -> sm.s3: "Metadata Relation" {
+#     target-arrowhead {
+#       shape: diamond
+#     }
+#   }
+
+# sm.fur1 -> sm.e1: "Metadata Relation" {
+#     target-arrowhead {
+#       shape: diamond
+#     }
+#   }
+# sm.fur2 -> sm.e2: "Metadata Relation" {
+#     target-arrowhead {
+#       shape: diamond
+#     }
+#   }
+
+app:"Application"
+app.cf:"Config File"
+app.logic:"App Logic"
+
+app.cf <-> sm: Automatic Configuration {
+    target-arrowhead {
+      shape: diamond
+      style.filled: true
+    }
+    source-arrowhead {
+        shape: diamond
+        style.filled: true
+      }
+  }
+
+app.logic <-> pd: Application Execution {
+    target-arrowhead {
+      shape: diamond
+      style.filled: true
+    }
+    source-arrowhead {
+        shape:diamond
+        style.filled: true
+      }
+  }
