@@ -1,0 +1,18 @@
+URI,comment,type,config,point_list
+FCU1,FCU1,Heat_Pump,FCU1.config, FCU_point_list.csv
+FCU2,FCU2,Heat_Pump,FCU2.config, FCU_point_list.csv
+FCU3,FCU3,Heat_Pump,FCU3.config, FCU_point_list.csv
+FCU4,FCU4,Heat_Pump,FCU4.config, FCU_point_list.csv
+FCU5,FCU5,Heat_Pump,FCU5.config, FCU_point_list.csv
+Furnace1,Furnace1,AHU,Furnace1.config, Furnace_point_list.csv
+Furnace2,Furnace2,AHU,Furnace2.config, Furnace_point_list.csv
+Boiler1,Boiler1,Boiler,Boiler1.config,
+Boiler2,Boiler2,Boiler,Boiler2.config,
+HeatEx1,HeatEx1,HeatExchanger,HeatEx1.config, 
+HeatEx2,HeatEx2,HeatExchanger,HeatEx2.config, 
+Fan1,Fan1,Fan,Fan1.config, 
+Fan2,Fan2,Fan,Fan2.config, 
+Bldg,Bldg,Building,,
+Office,Office,Office,,
+AdminSpace,AdminSpace,Room,,
+Zone1,Zone1,HVAC_Zone,,

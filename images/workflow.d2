@@ -1,31 +1,33 @@
 # Zone Level Semantic Model
-zls: "Zone Semantic Model" {
+# 
+# Need to Update so that the parts of creating the device semantic model are grouped in with the other semantic modeling
+# Device semantic model will have an arrow coming from the Device Configuration Process. 
+zls: "Semantic Model" {
     'style': {}
 }
 zls.bi: "Building Information" {
     'style': {}
     'ex': |
         Add in building information. Information required may be  
-        application specific. At least the building name is required
+        application specific.
 
         Information required:
          - Name 
          - URI
-         - (Optional) Information about campus, location, etc. 
-         - (Optional) Information about physical spaces
+         - (Optional) Information about campus, location, or other  
+         building characteristics
     |
 }
-zls.ri: " (Optional) Physical Information" {
+zls.ri: " (Optional) Floor Plan Information" {
     'style': {}
     'ex': |
-        Add in information about the pertinant physical spaces  
-        This is completely optional. If necessary, create 
-        relationships between floors and rooms
+        Add in information about the rooms, floors, etc.
 
         Information required:
          - Name 
          - URI
-         - (Optional) Relationships between physical spaces 
+         - Space Type
+         - (Optional) Relationships between spaces
     |
 }
 
@@ -39,62 +41,99 @@ zls.zi: "Zone Information" {
         Information required:
          - Name 
          - URI
-         - (Optional) reference to other zones
+         - (Optional) Relationship to other zones and floor plan
     |
 }
+
+zls.ei: "Equipment Information" {
+    'style': {}
+    'ex': |
+        create a semantic model of the equipment.  
+        This semantic model can be used to automatically configure  
+        the Platform Driver and devices.  
+        This process is guided through user interface.
+          
+
+        Information required:
+         - Name 
+         - URI
+         - Relationships to fed Zone or containing Equipment
+    |
+}
+
+# Device Config Process.ce: "Contained Equipment" {
+#     'style':{}
+#     'ex': |
+#         Create sub-level equipment (eg:Fans, Heating/Cooling Coils)
+
+#         Information required:
+#          - Relationship and URI 
+#          - Name
+#          - URI
+#          - Device Config File
+#          - Point list (csv file)
+#         |
+# }
+
+# Device Config Process.ce2: "Contained Equipment" {
+#     'style':{}
+#     'ex': |
+#         Create sub-level equipment (eg:Fans, Heating/Cooling Coils)
+
+#         Information required:
+#          - Relationship and URI 
+#          - Name
+#          - URI
+#          - Device Config File
+#          - Point list (csv file)
+#         |
+# }
 
 zls.bi -> zls.zi 
 zls.bi -> zls.ri 
 zls.ri <- zls.zi
+zls.ei -> zls.zi
 
-Device Config Process.dlist: "Top Level Equipment" {
+vcp: "VOLTTRON Configuration Process"
+
+vcp.vec: "VOLTTRON Equipment Configuration Files" {
     'style': {}
     'ex': |
-        Create equipment (eg: AHU, Heat-Pump, etc.)
-        
-        Information required: 
-         - URI
-         - Name
-         - Device Config File
-         - Zone Served, reference to URI for zone 
-         - Point list (csv of points and details)
-         - (Optional) reference to other equipments
+    create VOLTTRON configuration files for Platform Driver.  
+    Each configuration file is linked by URI to the device instance  
+    in the semantic model
+      
+    Information required:
+     - Equipment Point List 
+     - URI
+     - Platform Driver Configuration
     | 
 }
 
-Device Config Process.ce: "Contained Equipment" {
+vcp.pdi: "Platform Driver Instantiation" {
     'style':{}
     'ex': |
-        Create sub-level equipment (eg:Fans, Heating/Cooling Coils)
-
-        Information required:
-         - Relationship and URI 
-         - Name
-         - URI
-         - Device Config File
-         - Point list (csv file)
+        Each device driver is configured and instantiated.  
+        If a Historian has been set up, monitoring will begin
         |
 }
 
-Device Config Process.ce2: "Contained Equipment" {
+vcp.ac: "Application Configuration" {
     'style':{}
     'ex': |
-        Create sub-level equipment (eg:Fans, Heating/Cooling Coils)
-
-        Information required:
-         - Relationship and URI 
-         - Name
-         - URI
-         - Device Config File
-         - Point list (csv file)
+        Applications written for brick models can easily be  
+        translated to run on data collected by the platform.  
+        Control applications come with config-generation file  
+        to create generate a config file for a volttron agent  
+        semi-automatically
         |
 }
 
-Device Config Process.dlist -> Device Config Process.ce
-Device Config Process.dlist -> Device Config Process.ce2
+vcp.vec -> vcp.pdi -> vcp.ac
+vcp.vec -> zls.ei -> vcp.pdi
 
-# Device Config Process.dlist -> zls.zi
-# Device Config Process.ce -> zls.zi
-# Device Config Process.ce2 -> zls.zi
+# vcp.dlist -> zls.zi
+# vcp.ce -> zls.zi
+# vcp.ce2 -> zls.zi
 
-Device Config Process -> zls.zi
+#vcp -> zls.zi

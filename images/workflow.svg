@@ -2,7 +2,7 @@
 <svg
 style="background: white;"
 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-width="2375" height="1498" viewBox="-102 -102 2375 1498"><style type="text/css">
+width="2073" height="1890" viewBox="-102 -102 2073 1890"><style type="text/css">
 <![CDATA[
 .shape {
   shape-rendering: geometricPrecision;
@@ -775,63 +775,60 @@ width="2375" height="1498" viewBox="-102 -102 2375 1498"><style type="text/css">
 .md .contains-task-list:dir(rtl) .task-list-item-checkbox {
   margin: 0 -1.6em 0.25em 0.2em;
 }
-</style><g id="zls"><g class="shape" ><rect x="0" y="0" width="886" height="1294" style="fill:#E3E9FD;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" /></g><text class="text" x="443.000000" y="33.000000" style="text-anchor:middle;font-size:28px;fill:#0A0F25">Zone Semantic Model</text></g><g id="Device Config Process"><g class="shape" ><rect x="927" y="0" width="1244" height="860" style="fill:#E3E9FD;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" /></g><text class="text" x="1549.000000" y="33.000000" style="text-anchor:middle;font-size:28px;fill:#0A0F25">Device Config Process</text></g><g id="zls.bi"><g class="shape" ><rect x="90" y="50" width="600" height="344" style="fill:#EDF0FD;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" /></g><text class="text" x="390.000000" y="79.000000" style="text-anchor:middle;font-size:24px;fill:#0A0F25">Building Information</text></g><g id="zls.ri"><g class="shape" ><rect x="40" y="960" width="703" height="284" style="fill:#EDF0FD;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" /></g><text class="text" x="391.500000" y="989.000000" style="text-anchor:middle;font-size:24px;fill:#0A0F25"> (Optional) Physical Information</text></g><g id="zls.zi"><g class="shape" ><rect x="292" y="494" width="511" height="316" style="fill:#EDF0FD;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" /></g><text class="text" x="547.500000" y="523.000000" style="text-anchor:middle;font-size:24px;fill:#0A0F25">Zone Information</text></g><g id="Device Config Process.dlist"><g class="shape" ><rect x="967" y="50" width="1035" height="344" style="fill:#EDF0FD;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" /></g><text class="text" x="1484.500000" y="79.000000" style="text-anchor:middle;font-size:24px;fill:#0A0F25">Top Level Equipment</text></g><g id="Device Config Process.ce"><g class="shape" ><rect x="1087" y="494" width="502" height="316" style="fill:#EDF0FD;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" /></g><text class="text" x="1338.000000" y="523.000000" style="text-anchor:middle;font-size:24px;fill:#0A0F25">Contained Equipment</text></g><g id="Device Config Process.ce2"><g class="shape" ><rect x="1629" y="494" width="502" height="316" style="fill:#EDF0FD;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" /></g><text class="text" x="1880.000000" y="523.000000" style="text-anchor:middle;font-size:24px;fill:#0A0F25">Contained Equipment</text></g><g id="zls.bi.ex"><g class="shape" ></g><g><foreignObject requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" x="205.000000" y="116.000000" width="389" height="212"><div xmlns="http://www.w3.org/1999/xhtml" class="md" style="background-color:transparent;color:#0A0F25;"><p>Add in building information. Information required may be<br />
-application specific. At least the building name is required</p>
+</style><g id="zls"><g class="shape" ><rect x="0" y="458" width="1233" height="1228" style="fill:#E3E9FD;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" /></g><text class="text" x="616.500000" y="491.000000" style="text-anchor:middle;font-size:28px;fill:#0A0F25">Semantic Model</text></g><g id="vcp"><g class="shape" ><rect x="1274" y="0" width="595" height="1686" style="fill:#E3E9FD;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" /></g><text class="text" x="1571.500000" y="33.000000" style="text-anchor:middle;font-size:28px;fill:#0A0F25">VOLTTRON Configuration Process</text></g><g id="zls.bi"><g class="shape" ><rect x="40" y="508" width="547" height="332" style="fill:#EDF0FD;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" /></g><text class="text" x="313.500000" y="537.000000" style="text-anchor:middle;font-size:24px;fill:#0A0F25">Building Information</text></g><g id="zls.ri"><g class="shape" ><rect x="89" y="1348" width="662" height="288" style="fill:#EDF0FD;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" /></g><text class="text" x="420.000000" y="1377.000000" style="text-anchor:middle;font-size:24px;fill:#0A0F25"> (Optional) Floor Plan Information</text></g><g id="zls.zi"><g class="shape" ><rect x="273" y="940" width="668" height="308" style="fill:#EDF0FD;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" /></g><text class="text" x="607.000000" y="969.000000" style="text-anchor:middle;font-size:24px;fill:#0A0F25">Zone Information</text></g><g id="zls.ei"><g class="shape" ><rect x="627" y="508" width="566" height="332" style="fill:#EDF0FD;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" /></g><text class="text" x="910.000000" y="537.000000" style="text-anchor:middle;font-size:24px;fill:#0A0F25">Equipment Information</text></g><g id="vcp.vec"><g class="shape" ><rect x="1314" y="50" width="508" height="308" style="fill:#EDF0FD;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" /></g><text class="text" x="1568.000000" y="79.000000" style="text-anchor:middle;font-size:24px;fill:#0A0F25">VOLTTRON Equipment Configuration Files</text></g><g id="vcp.pdi"><g class="shape" ><rect x="1365" y="940" width="446" height="308" style="fill:#EDF0FD;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" /></g><text class="text" x="1588.000000" y="969.000000" style="text-anchor:middle;font-size:24px;fill:#0A0F25">Platform Driver Instantiation</text></g><g id="vcp.ac"><g class="shape" ><rect x="1358" y="1348" width="459" height="288" style="fill:#EDF0FD;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" /></g><text class="text" x="1587.500000" y="1377.000000" style="text-anchor:middle;font-size:24px;fill:#0A0F25">Application Configuration</text></g><g id="zls.bi.ex"><g class="shape" ></g><g><foreignObject requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" x="90.000000" y="570.000000" width="406" height="208"><div xmlns="http://www.w3.org/1999/xhtml" class="md" style="background-color:transparent;color:#0A0F25;"><p>Add in building information. Information required may be<br />
+application specific.</p>
 <p>Information required:</p>
 <ul>
 <li>Name</li>
 <li>URI</li>
-<li>(Optional) Information about campus, location, etc.</li>
-<li>(Optional) Information about physical spaces</li>
+<li>(Optional) Information about campus, location, or other<br />
+building characteristics</li>
 </ul>
-</div></foreignObject></g></g><g id="zls.ri.ex"><g class="shape" ></g><g><foreignObject requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" x="106.000000" y="1010.000000" width="587" height="184"><div xmlns="http://www.w3.org/1999/xhtml" class="md" style="background-color:transparent;color:#0A0F25;"><p>Add in information about the pertinant physical spaces<br />
-This is completely optional. If necessary, create
-relationships between floors and rooms</p>
+</div></foreignObject></g></g><g id="zls.ri.ex"><g class="shape" ></g><g><foreignObject requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" x="321.000000" y="1398.000000" width="317" height="188"><div xmlns="http://www.w3.org/1999/xhtml" class="md" style="background-color:transparent;color:#0A0F25;"><p>Add in information about the rooms, floors, etc.</p>
 <p>Information required:</p>
 <ul>
 <li>Name</li>
 <li>URI</li>
-<li>(Optional) Relationships between physical spaces</li>
+<li>Space Type</li>
+<li>(Optional) Relationships between spaces</li>
 </ul>
-</div></foreignObject></g></g><g id="zls.zi.ex"><g class="shape" ></g><g><foreignObject requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" x="342.000000" y="548.000000" width="411" height="208"><div xmlns="http://www.w3.org/1999/xhtml" class="md" style="background-color:transparent;color:#0A0F25;"><p>create a zone level semantic model. This may be as simple<br />
+</div></foreignObject></g></g><g id="zls.zi.ex"><g class="shape" ></g><g><foreignObject requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" x="422.000000" y="990.000000" width="411" height="208"><div xmlns="http://www.w3.org/1999/xhtml" class="md" style="background-color:transparent;color:#0A0F25;"><p>create a zone level semantic model. This may be as simple<br />
 as a list of zones with their names, if there is no interest in<br />
 modeling the relationships between zones or physical spaces</p>
 <p>Information required:</p>
 <ul>
 <li>Name</li>
 <li>URI</li>
-<li>(Optional) reference to other zones</li>
+<li>(Optional) Relationship to other zones and floor plan</li>
 </ul>
-</div></foreignObject></g></g><g id="Device Config Process.dlist.ex"><g class="shape" ></g><g><foreignObject requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" x="1188.000000" y="100.000000" width="308" height="244"><div xmlns="http://www.w3.org/1999/xhtml" class="md" style="background-color:transparent;color:#0A0F25;"><p>Create equipment (eg: AHU, Heat-Pump, etc.)</p>
+</div></foreignObject></g></g><g id="zls.ei.ex"><g class="shape" ></g><g><foreignObject requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" x="739.000000" y="558.000000" width="405" height="232"><div xmlns="http://www.w3.org/1999/xhtml" class="md" style="background-color:transparent;color:#0A0F25;"><p>create a semantic model of the equipment.<br />
+This semantic model can be used to automatically configure<br />
+the Platform Driver and devices.<br />
+This process is guided through user interface.</p>
 <p>Information required:</p>
 <ul>
-<li>URI</li>
 <li>Name</li>
-<li>Device Config File</li>
-<li>Zone Served, reference to URI for zone</li>
-<li>Point list (csv of points and details)</li>
-<li>(Optional) reference to other equipments</li>
+<li>URI</li>
+<li>Relationships to fed Zone or containing Equipment</li>
 </ul>
-</div></foreignObject></g></g><g id="Device Config Process.ce.ex"><g class="shape" ></g><g><foreignObject requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" x="1137.000000" y="544.000000" width="402" height="216"><div xmlns="http://www.w3.org/1999/xhtml" class="md" style="background-color:transparent;color:#0A0F25;"><p>Create sub-level equipment (eg:Fans, Heating/Cooling Coils)</p>
+</div></foreignObject></g></g><g id="vcp.vec.ex"><g class="shape" ></g><g><foreignObject requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" x="1364.000000" y="100.000000" width="408" height="208"><div xmlns="http://www.w3.org/1999/xhtml" class="md" style="background-color:transparent;color:#0A0F25;"><p>create VOLTTRON configuration files for Platform Driver.<br />
+Each configuration file is linked by URI to the device instance<br />
+in the semantic model</p>
 <p>Information required:</p>
 <ul>
-<li>Relationship and URI</li>
-<li>Name</li>
+<li>Equipment Point List</li>
 <li>URI</li>
-<li>Device Config File</li>
-<li>Point list (csv file)</li>
+<li>Platform Driver Configuration</li>
 </ul>
-</div></foreignObject></g></g><g id="Device Config Process.ce2.ex"><g class="shape" ></g><g><foreignObject requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" x="1679.000000" y="544.000000" width="402" height="216"><div xmlns="http://www.w3.org/1999/xhtml" class="md" style="background-color:transparent;color:#0A0F25;"><p>Create sub-level equipment (eg:Fans, Heating/Cooling Coils)</p>
-<p>Information required:</p>
-<ul>
-<li>Relationship and URI</li>
-<li>Name</li>
-<li>URI</li>
-<li>Device Config File</li>
-<li>Point list (csv file)</li>
-</ul>
-</div></foreignObject></g></g><g id="zls.(bi -&gt; zi)[0]"><marker id="mk-3990223579" markerWidth="10.000000" markerHeight="12.000000" refX="7.000000" refY="6.000000" viewBox="0.000000 0.000000 10.000000 12.000000" orient="auto" markerUnits="userSpaceOnUse"> <polygon class="connection" fill="#0D32B2" stroke-width="2" points="0.000000,0.000000 10.000000,6.000000 0.000000,12.000000" /> </marker><path d="M 547.250000 396.000000 C 547.250000 434.000000 547.250000 454.000000 547.250000 490.000000" class="connection" style="fill:none;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" marker-end="url(#mk-3990223579)" mask="url(#2489751277)"/></g><g id="zls.(bi -&gt; ri)[0]"><path d="M 251.750000 396.000000 C 251.750000 434.000000 251.750000 454.000000 251.750000 469.000000 C 251.750000 484.000000 251.750000 525.600000 251.750000 573.000000 C 251.750000 620.400000 251.750000 683.600000 251.750000 731.000000 C 251.750000 778.400000 251.750000 820.000000 251.750000 835.000000 C 251.750000 850.000000 251.750000 920.000000 251.750000 956.000000" class="connection" style="fill:none;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" marker-end="url(#mk-3990223579)" mask="url(#2489751277)"/></g><g id="zls.(ri &lt;- zi)[0]"><marker id="mk-2510427236" markerWidth="10.000000" markerHeight="12.000000" refX="3.000000" refY="6.000000" viewBox="0.000000 0.000000 10.000000 12.000000" orient="auto" markerUnits="userSpaceOnUse"> <polygon class="connection" fill="#0D32B2" stroke-width="2" points="10.000000,0.000000 0.000000,6.000000 10.000000,12.000000" /> </marker><path d="M 547.250000 956.000000 C 547.250000 920.000000 547.250000 850.000000 547.250000 812.000000" class="connection" style="fill:none;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" marker-start="url(#mk-2510427236)" mask="url(#2489751277)"/></g><g id="Device Config Process.(dlist -&gt; ce)[0]"><path d="M 1337.750000 396.000000 C 1337.750000 434.000000 1337.750000 454.000000 1337.750000 490.000000" class="connection" style="fill:none;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" marker-end="url(#mk-3990223579)" mask="url(#2489751277)"/></g><g id="Device Config Process.(dlist -&gt; ce2)[0]"><path d="M 1879.750000 396.000000 C 1879.750000 434.000000 1879.750000 454.000000 1879.750000 490.000000" class="connection" style="fill:none;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" marker-end="url(#mk-3990223579)" mask="url(#2489751277)"/></g><g id="(Device Config Process -&gt; zls.zi)[0]"><path d="M 924.842138 532.600053 C 827.550000 563.200000 901.950000 539.800000 806.565723 569.799893" class="connection" style="fill:none;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" marker-end="url(#mk-3990223579)" mask="url(#2489751277)"/></g><mask id="2489751277" maskUnits="userSpaceOnUse" x="-100" y="-100" width="2375" height="1498">
-<rect x="-100" y="-100" width="2375" height="1498" fill="white"></rect>
+</div></foreignObject></g></g><g id="vcp.pdi.ex"><g class="shape" ></g><g><foreignObject requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" x="1415.000000" y="1070.000000" width="346" height="48"><div xmlns="http://www.w3.org/1999/xhtml" class="md" style="background-color:transparent;color:#0A0F25;"><p>Each device driver is configured and instantiated.<br />
+If a Historian has been set up, monitoring will begin</p>
+</div></foreignObject></g></g><g id="vcp.ac.ex"><g class="shape" ></g><g><foreignObject requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" x="1408.000000" y="1432.000000" width="359" height="120"><div xmlns="http://www.w3.org/1999/xhtml" class="md" style="background-color:transparent;color:#0A0F25;"><p>Applications written for brick models can easily be<br />
+translated to run on data collected by the platform.<br />
+Control applications come with config-generation file<br />
+to create generate a config file for a volttron agent<br />
+semi-automatically</p>
+</div></foreignObject></g></g><g id="zls.(bi -&gt; zi)[0]"><marker id="mk-3990223579" markerWidth="10.000000" markerHeight="12.000000" refX="7.000000" refY="6.000000" viewBox="0.000000 0.000000 10.000000 12.000000" orient="auto" markerUnits="userSpaceOnUse"> <polygon class="connection" fill="#0D32B2" stroke-width="2" points="0.000000,0.000000 10.000000,6.000000 0.000000,12.000000" /> </marker><path d="M 440.750000 842.000000 C 440.750000 880.000000 440.750000 900.000000 440.750000 936.000000" class="connection" style="fill:none;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" marker-end="url(#mk-3990223579)" mask="url(#3151540935)"/></g><g id="zls.(bi -&gt; ri)[0]"><path d="M 233.000000 842.000000 C 233.000000 880.000000 233.000000 900.000000 233.000000 915.000000 C 233.000000 930.000000 233.000000 970.800000 233.000000 1017.000000 C 233.000000 1063.200000 233.000000 1124.800000 233.000000 1171.000000 C 233.000000 1217.200000 233.000000 1308.000000 233.000000 1344.000000" class="connection" style="fill:none;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" marker-end="url(#mk-3990223579)" mask="url(#3151540935)"/></g><g id="zls.(ri &lt;- zi)[0]"><marker id="mk-2510427236" markerWidth="10.000000" markerHeight="12.000000" refX="3.000000" refY="6.000000" viewBox="0.000000 0.000000 10.000000 12.000000" orient="auto" markerUnits="userSpaceOnUse"> <polygon class="connection" fill="#0D32B2" stroke-width="2" points="10.000000,0.000000 0.000000,6.000000 10.000000,12.000000" /> </marker><path d="M 627.250000 1344.000000 C 627.250000 1308.000000 627.250000 1288.000000 627.250000 1250.000000" class="connection" style="fill:none;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" marker-start="url(#mk-2510427236)" mask="url(#3151540935)"/></g><g id="zls.(ei -&gt; zi)[0]"><path d="M 793.500000 842.000000 C 793.500000 880.000000 793.500000 900.000000 793.500000 936.000000" class="connection" style="fill:none;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" marker-end="url(#mk-3990223579)" mask="url(#3151540935)"/></g><g id="vcp.(vec -&gt; pdi)[0]"><path d="M 1587.750000 360.000000 C 1587.750000 398.000000 1587.750000 418.000000 1587.750000 433.000000 C 1587.750000 448.000000 1587.750000 468.000000 1587.750000 483.000000 C 1587.750000 498.000000 1587.750000 541.200000 1587.750000 591.000000 C 1587.750000 640.800000 1587.750000 707.200000 1587.750000 757.000000 C 1587.750000 806.800000 1587.750000 900.000000 1587.750000 936.000000" class="connection" style="fill:none;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" marker-end="url(#mk-3990223579)" mask="url(#3151540935)"/></g><g id="vcp.(pdi -&gt; ac)[0]"><path d="M 1587.750000 1250.000000 C 1587.750000 1288.000000 1587.750000 1308.000000 1587.750000 1344.000000" class="connection" style="fill:none;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" marker-end="url(#mk-3990223579)" mask="url(#3151540935)"/></g><g id="(vcp.vec -&gt; zls.ei)[0]"><path d="M 1480.750000 360.000000 C 1480.750000 398.000000 1480.750000 418.000000 1480.750000 433.000000 C 1480.750000 448.000000 1423.350000 525.600000 1197.574267 594.827403" class="connection" style="fill:none;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" marker-end="url(#mk-3990223579)" mask="url(#3151540935)"/></g><g id="(zls.ei -&gt; vcp.pdi)[0]"><path d="M 1047.500000 842.000000 C 1047.500000 880.000000 1111.100000 958.200000 1361.654361 1029.899518" class="connection" style="fill:none;stroke:#0D32B2;opacity:1.000000;stroke-width:2;" marker-end="url(#mk-3990223579)" mask="url(#3151540935)"/></g><mask id="3151540935" maskUnits="userSpaceOnUse" x="-100" y="-100" width="2073" height="1890">
+<rect x="-100" y="-100" width="2073" height="1890" fill="white"></rect>
 
 </mask><style type="text/css"><![CDATA[
 .text {
