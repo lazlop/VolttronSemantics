@@ -1,0 +1,8 @@
+Volttron Point Name,Point Name,Writable,Unit,Type,Notes,Default Value
+targetTemperature,targetTemperature,true,C,float,the setpoint,
+timeOfTemperature,time,false,,str,the time a temperature value was measured by the device,
+temperature,temperature,false,C,float,The current measured temperature,
+on,on,true,,str,if the unit is on,
+mode,mode,true,,str, Mode of unit: cooling heating or auto,
+fanLevel,fanLevel true,,str, fan level,auto 
+
