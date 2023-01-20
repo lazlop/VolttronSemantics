@@ -1,0 +1,23 @@
+volttron-topic:
+  body: >
+    @prefix p: <urn:___param___#> .
+    @prefix vltt: <https://www.doesntexist.org/volttronsemantics#> .
+
+    p:name a vltt:VolttronTopic;
+      vltt:hasTopicName p:topic .
+
+volttron-point-list:
+  body: >
+    @prefix p: <urn:___param___#> .
+    @prefix vltt: <https://www.doesntexist.org/volttronsemantics#> .
+
+    p:name a vltt:VolttronPointList;
+      vltt:hasPath p:config-path .
+
+volttron-device-config:
+  body: >
+    @prefix p: <urn:___param___#> .
+    @prefix vltt: <https://www.doesntexist.org/volttronsemantics#> .
+
+    p:name a vltt:VolttronDeviceConfig;
+      vltt:hasPath p:config-path .
