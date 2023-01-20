@@ -4,23 +4,22 @@
 import rdflib
 
 g = rdflib.Graph()
-g.parse("bestest_air.ttl")
+g.parse("building_model.ttl")
 
 query = """
-SELECT DISTINCT ?zone ?TZonPoint ?TSetHeaZonPoint ?TSetCooZonPoint
+SELECT DISTINCT *
 WHERE {
-    ?zone a brick:Zone ;
-    brick:hasPoint ?TZon, ?TsetZon, ?TSetHeaZon, ?TSetCooZon .
+    ?zone a brick:HVAC_Zone .
+    ?equip brick:feeds ?zone ;
+        a brick:FCU ;
+        brick:hasPoint ?TZon, ?TsetZon .
+
+    ?TZon a brick:Air_Temperature_Sensor ;
+      ref:hasExternalReference/ref:hasTimeseriesId ?TZonPoint  .
+
+    ?TsetZon a brick:Air_Temperature_Setpoint ;
+      ref:hasExternalReference/ref:hasTimeseriesId ?TsetZonPoint  .
     
-    ?TZon a brick:Zone_Air_Temperature_Sensor ;
-        ref:hasExternalReference/volttron:topic-name ?TZonPoint  .
-
-    ?TSetHeaZon a brick:Zone_Air_Heating_Temperature_Setpoint ;
-        ref:hasExternalReference/volttron:topic-name ?TSetHeaZonPoint  .
-
-    ?TSetCooZon a brick:Zone_Air_Cooling_Temperature_Setpoint ;
-        ref:hasExternalReference/volttron:topic-name ?TSetCooZonPoint  .
-
 }"""
 
 # %%
@@ -30,56 +29,60 @@ qres = g.query(query)
 zone = []
 zone_name = []
 TZonPoint = []
-TSetHeaZonPoint = []
-TSetCooZonPoint = []
+TsetZonPoint = []
 
 for row in qres:
     zone.append (str(row.zone))
     zone_name.append(str(row.zone[14:-5]))
     TZonPoint.append (str(row.TZonPoint))
-    TSetHeaZonPoint.append (str(row.TSetHeaZonPoint))
-    TSetCooZonPoint.append (str(row.TSetCooZonPoint))
+    TsetZonPoint.append (str(row.TsetZonPoint))
 
     # Print points from query
-    print(f"{row.zone} {row.TZonPoint} {row.TSetHeaZonPoint} {row.TSetCooZonPoint}")
-
-# %%
-# Obtain only the name of the zone
-print ("zone_names",zone_name)  
+    print(f"{row.zone} {row.TZonPoint} {row.TsetZonPoint}")
 
 # %%
 # Print points from query (optional) 
 print(TZonPoint)
 for x in range(len(qres)):
-    #print ("zone",zone[x])
-    print ("TZonPoint",TZonPoint[x])
-    print ("TSetHeaZonPoint",TSetHeaZonPoint[x])
-    print ("TSetCooZonPoint",TSetCooZonPoint[x])
-    print ("next zone")
+    print ("TempSensorPoint",TZonPoint[x])
+    print ("TempSetPoint",TsetZonPoint[x])
 
-
-
-
-
-# %% 
+# %%
 # Test control algorithm
-class con_shed_TsetHea_CooZon(object):
-    
-    def __init__(self, price_threshold = 0.045):
+
+
+class con_shed_TsetZon(object):
+
+    def __init__(self, price_threshold = 0.25, step = 900):
 
         '''Constructor.
-
         Parameters
         ----------            
             
-        Price_threshold : float
+        price_threshold : float
             price threshold to enable DR event.
-
-
+        step : float
+            receives the current step from the simulation. Default value 900s.
         '''
-    
+
         self.price_threshold = price_threshold
+        self.step = step
     
+    def get_adj_size(self):
+        # Compute temperature drift rate allowed under ASHRAE Standard 55 
+        # according to time period  
+        if self.step <= 900:         # <= 15 min
+            self.TSet_adj_current = 1.11
+        elif self.step <= 1800:      # <= 30 min
+            self.TSet_adj_current = 1.67
+        elif self.step <= 3600:      # <= 60 min
+           self.TSet_adj_current = 2.22
+        else:                       # > 120 min 
+            self.TSet_adj_current = 2.77
+
+        # Temporary variable to account for ratcheting within the loop  
+        return TSet_adj_current
+
     def compute_control(self, y, f, step):
         '''Compute the control input from the measurement.
     
@@ -88,15 +91,12 @@ class con_shed_TsetHea_CooZon(object):
         y : dict
             Contains the current values of the measurements.
             {:}
-
         f : dict
             Contains the current values of the forecasts.
             {:}
-
         step : int
             Contains the current step value.
             {:}
-
         Returns
         -------
         u : dict
@@ -104,88 +104,100 @@ class con_shed_TsetHea_CooZon(object):
             { : }
     
         '''
-        # Temperature drift rate allowed under ASHRAE Standard 55 according to time period
-        if step <= 900:         # <= 15 min
-            TSet_adj = 2#1.11
-        elif step <= 1800:      # <= 30 min
-            TSet_adj = 1.67
-        elif step <= 3600:      # <= 60 min
-            TSet_adj = 2.22
-        else:                   # > 120 min 
-            TSet_adj = 2.77
-
-        # Get Dynamic Electricty Price Forecast [Euro/kWh]
-        priceSche = f['PriceElectricPowerDynamic'] 
-
-        # Get comfort range (manually defined in BOPtest, and equal for all zones)
-        LowerSetp = f['LowerSetp[1]']       
-  
-        # Adjust min values of comfort range during a DR event 
-        # (as the Baseline TSetHeaZon = LowerSetp, DR logic "TSetHeaZon - TSet_adj > LowerSetp" would not work)
-        # Use LowerSetp to follow same schedule (operating modes in the baseline not working based on the occ schedule)
-        TSetMin = []
-        for t in LowerSetp:
-            if t == 12 + 273.15: #285.15
-                TSetMin.append(12 + 273.15) # Lower setpoint for non-occupied periods
-                # TSet_min 285.15 (same as LowerSetp because it's a hard limit from BOPTest)
-            else: # 20 + 273.15 #293.15
-                TSetMin.append(15 + 273.15) # Lower setpoint for occupied periods
-                # TSet_min 288.15 (lower that LowerSetp to allow DR logic)
-  
+               
+        # Defines the control input to be used for the next step.
         u = {}
+
         # Iterate over each zone
-          
         for zone in range(len(qres)):
-              
-              # Get zone air temperature heating setpoint per zone
-              TSetHeaZon = (y[TSetHeaZonPoint[zone]]) 
-              TSetHeaZon_name = ' '.join([TSetHeaZonPoint[zone]])
+            
+            # Get comfort range 
+            # Get zone operative temperature setpoint for heating per zone
+            #(Boptest LowerSetp = "reaTSetHea_y")
 
-              # Get zone air temperature cooling setpoint per zone
-              #TSetCooZon = (y[TSetCooZonPoint[zone]]) 
-              #TSetCooZon_name = ' '.join([TSetCooZonPoint[zone]])
+            TSetMin = 20 #  (y[TSetMinPoint[zone]])
+                        
+            # Get zone operative temperature setpoint for cooling
+            #(Boptest UpperSetp = "reaTSetCoo_y")
+            TSetMax = 22 # (y[TSetMaxPoint[zone]]) 
 
-              # Get zone operative temperature per zone
-              TZon = (y[TZonPoint[zone]])
+            # Get zone operative temperature setpoint
+            TsetZon = self.Tset_prev # (y[TsetZonPoint[zone]]) 
+            #TsetZon_name = ' '.join([TsetZonPoint[zone]])
 
-              for i in range(25):
-              
-                # Test runaway condition
-                if TZon < TSetMin[i] or TSetMin[i] == 12 + 273.15:
-                    # Compute baseline control - for heating (release DR shed control)
-                    #print(TZon, "<", TSetmin[i], "or", TSetmin[i], "= 285.15" )
-                    print("TZon < TSetmin or TSetmin = 285.15" )
-                    u [TSetHeaZon_name[:-1] + 'activate'] = 0 
-                    
+            # Get zone operative temperature
+            TZon = self.get_ave_temp() # (y[TZonPoint[zone]]) 
 
+            # Get Dynamic Electricity Price Forecast [Euro/kWh]
+            price = self.price_schedule[self.hour] # f['PriceElectricPowerDynamic'] 
+            price_next_hour = self.price_schedule[self.hour + 1]
+                               
+            # Test runaway condition
+            if TZon < TSetMin or TZon > TSetMax:
+                # Release DR shed control (compute baseline control)
+                #u [TsetZon_name[:-1] + 'activate'] = 0 
+                        
+                # Disable ratcheting (if started)               
+                # self.TSet_adj_current = self.TSet_adj_original
+                
+                self.write_baseline()
+                self.dr_flag = False
+                # When does this flag reset back to true?
+            
+            else:
+                
                 # Verify DR event
-                elif priceSche[i] > self.price_threshold:
-                    print("price > threshold")
-                    #print(priceSche[i], ">", self.price_threshold)
-                    #print("TSetHeaZon",TSetHeaZon) 
-                    #print("LowerSetp", LowerSetp[i]) 
-                                            
-                    # Compute DR shed control (only for heating)
-                    if TSetHeaZon - TSet_adj > TSetMin[i]:
-                        offset = TSet_adj 
+                if price > self.price_threshold:
+                    
+                    # Compute DR shed control (only for heating)                         
+                    if TsetZon - self.TSet_adj_current > TSetMin:
+                        offset = self.TSet_adj_current
+                        
+                        # Enable ratcheting
+                        self.TSet_adj_current =  0.5                          
                         
                     else:
                         offset = 0 
+                                            
+                    new_TsetZon =  TsetZon - offset
+                    u [TsetZon_name] = new_TsetZon
+                    
+                    self.write_dr_point()
+
+                    # u [TsetZon_name[:-1]+ 'activate'] = 1
+                    self.dr_flag = True  
+
+                    return   
+
+                elif price_next_hour > self.price_threshold: 
+
+
+                    # Compute DR shed control (only for heating)                         
+                    if TsetZon - self.TSet_adj_current > TSetMin:
+                        offset = self.TSet_adj_current
                         
-                    new_TsetZon =  TSetHeaZon - offset
-                    u [TSetHeaZon_name] = new_TsetZon
-                    u [TSetHeaZon_name[:-1]+ 'activate'] = 1
-                    #print("new_TsetZon",new_TsetZon) 
+                        # Enable ratcheting
+                        self.TSet_adj_current =  0.5                          
+                        
+                    else:
+                        offset = 0 
+                                            
+                    new_TsetZon =  TsetZon - offset
+                    u [TsetZon_name] = new_TsetZon
+                    
+                    self.write_dr_point()
+
+                    # u [TsetZon_name[:-1]+ 'activate'] = 1
+                    self.dr_flag = True  
+
 
                     
                 else:
-                    # Compute baseline control (release DR shed control)
-                    print("price < threshold")   
-                    #print("TZonHeaSet",TSetHeaZon)          
-                    #print("LowerSetp", LowerSetp[i])
-                    u [TSetHeaZon_name[:-1] + 'activate'] = 0 
-
+                    # Release DR shed control (compute baseline control)
+                    # u [TsetZon_name[:-1] + 'activate'] = 0
+                    # Disable ratcheting (if started)   
+                    # self.TSet_adj_current = self.TSet_adj_original
+                    self.dr_flag = False
+                    self.write_baseline()
+                                
         return u
-            
-
-# %%
