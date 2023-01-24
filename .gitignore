@@ -1,6 +1,7 @@
 #added files
 d2.sh
 .DS_Store
+*.config
 
 # template 
 # Byte-compiled / optimized / DLL files

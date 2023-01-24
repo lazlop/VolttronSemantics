@@ -1,7 +1,0 @@
-Volttron Point Name,Point Name,Writable,Unit,Type,Notes,Brick Type
-targetTemperature,targetTemperature,true,C,float,the setpoint,Air_Temperature_Setpoint
-timeOfTemperature,time,false,,str,the time a temperature value was measured by the device,Time_Parameter
-temperature,temperature,false,C,float,The current measured temperature,Air_Temperature_Sensor
-on,on,true,,str,if the unit is on,On_Off_Status
-mode,mode,true,,str, Mode of unit: cooling heating or auto,Operating_Mode_Status
-fanLevel,fanLevel,true,,str,fan level auto,Fan_Status
