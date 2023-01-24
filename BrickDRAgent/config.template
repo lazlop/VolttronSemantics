@@ -1,22 +1,5 @@
 {
-"occ_schedule": [6,18], # List with start and end time.
-"setpoints": {"OccHeat": 68,
-                "OccCool": 74,
-                "LowOccHeat": 68,
-                "LowOccCool": 76,
-                "UnoccHeat": 60.1,
-                "UnoccCool": 84.9,
-                "PCHeat": 64,
-                "PCCool": 73,
-                "LSHeat": 64,
-                "LSCool": 76} ,
-"sheet_url":  ,
-"database":
-    {
-        "user": ,
-        "passwd": ,
-        "host":  ,
-        "port": ,
-        "database": 
-    }
+    "schedule":
+    "baseline":
+    "active_testing":
 }
