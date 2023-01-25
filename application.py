@@ -43,7 +43,7 @@ for row in qres:
 print(TZonPoint)
 
 # %%
-for x in range(len(equip)):
+for x in range(len(zone)):
     print ("TempSensorPoint",TZonPoint[x])
     print ("TempSetPoint",TsetZonPoint[x])
 
@@ -185,15 +185,11 @@ query_model("building_model.ttl")
 
 # %%
      
-def get_setpoint(TZon, TsetZon, price, price_next_hour, step):
+def get_setpoint(TZon, TsetZon, price, price_next_hour, step, TSetMin, TSetMax, price_threshold_value):
     """
     returning None if baseline control should be used
     returning shed adjustment if shed controls should be used
     """
-    TSetMin = 16
-    TSetMax = 21
-    price_threshold_value = 0.25
-    
     TSet_adj_current = get_adj(step)
 
     if runaway_condition(TZon, TSetMin, TSetMax):
@@ -213,17 +209,41 @@ def get_setpoint(TZon, TsetZon, price, price_next_hour, step):
 
         return new_TsetZon
 
-# %%
-for i in [0, 900, 1800, 2700, 3600, 4500, 5400, 6300, 7200, 8100, 9000]:
-    print(main(19, 21, 0.27, 0.27, i))
+def main(TZonValues, TsetZonValues, equip, price, price_next_hour, step, TSetMin, TSetMax, price_threshold_value = 0.25):
+    setpoints = []
+    for i in range(len(equip)):
+        setpoint = get_setpoint(TZonValues[i], TsetZonValues[i], price, price_next_hour, step, TSetMin, TSetMax, price_threshold_value)
+        setpoints.append(setpoint)
+        print("Equip: ", equip[i])
+        print("Setpoint: ", setpoint)
+    # would it be better to work with dictionaries than lists?
+    return setpoints
 
 # %%
-for i in [0, 900, 1800, 2700, 3600, 4500, 5400, 6300, 7200, 8100, 9000]:
-    print(main(16, 16, 0.23, 0.27, i))
+TZonValues = [19.1, 20, 17, 18, 19]
+TsetZonValues = [16, 16, 16, 16, 16]
+equip = [1, 2, 3, 4, 5]
+price = 0.23
+price_next_hour = 0.28
+step = 900
+TSetMin = 16
+TSetMax = 21
+main(TZonValues, TsetZonValues, equip, price, price_next_hour, step, TSetMin, TSetMax)
 
-# %%
 
-print(main(21, 21, 0.23, 0.23, 1800))
-print(main(21, 21, 0.27, 0.27, 1800))
-print(main(16, 16, 0.27, 0.27, 1800))
+# # %%
+# for i in [0, 900, 1800, 2700, 3600, 4500, 5400, 6300, 7200, 8100, 9000]:
+#     print(get_setpoint(19, 21, 0.27, 0.27, i, ))
+
+# # %%
+# for i in [0, 900, 1800, 2700, 3600, 4500, 5400, 6300, 7200, 8100, 9000]:
+#     print(get_setpoint(16, 16, 0.23, 0.27, i))
+
+# # %%
+
+# print(get_setpoint(21, 21, 0.23, 0.23, 1800))
+# print(get_setpoint(21, 21, 0.27, 0.27, 1800))
+# print(get_setpoint(16, 16, 0.27, 0.27, 1800))
+# # %%
+
 # %%

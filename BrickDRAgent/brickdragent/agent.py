@@ -16,6 +16,8 @@ from volttron.platform.messaging import headers as headers_mod
 from volttron.platform.agent import utils
 from volttron.platform.vip.agent import Agent, Core, RPC
 from volttron.platform.scheduling import cron
+from VolttronSemantics.application import query, main
+from time import sleep
 # import application
 
 _log = logging.getLogger(__name__)
@@ -67,46 +69,64 @@ class BrickDRAgent(Agent):
             '/edit#gid=', '/export?format=csv&gid=')
         self.baseline = self.config.get('baseline').replace(
             '/edit#gid=', '/export?format=csv&gid=')
-        self.active_testing = self.config.get('active_testing').replace(
+        self.prices = self.config.get('prices').replace(
             '/edit#gid=', '/export?format=csv&gid=')
+        self.furnace = self.config.get('furnace').replace(
+            '/edit#gid=', '/export?format=csv&gid=')
+
+        self.model_path = self.config.get('model_path')
+
+        self.TZonPoint, self.TsetZonPoint, self.equip = query(self.model_path)
+
+        self.read_schedule()
+        self.core.schedule(cron('0 */12 * * *'), self.control_runner)
+
 
         self.frequency = self.config.get('frequency', 15)
         self.core.schedule(cron('*/{} * * * *'.format(self.frequency)),
                            self.control_runner)
         self.control_runner()
         #Do I want to consistently write the unit? Once per day or each time I write?
+        # Do I want to read the schedule every time?, or just once ? 
     
     def read_schedule(self):
-        sched_df = pd.read_csv(self.schedule,
+        self.sched_df = pd.read_csv(self.schedule,
             parse_dates=True,
             index_col='Date')
-        active_testing_df = pd.read_csv(self.active_testing,
+        self.prices_df = pd.read_csv(self.prices,
                     index_col='Time')
-        baseline_df = pd.read_csv(self.baseline,
+        self.baseline_df = pd.read_csv(self.baseline,
                     index_col='Time')
-
-        return sched_df, active_testing_df, baseline_df
+        self.furnace_df = pd.read_csv(self.baseline,
+                    index_col='Time')
     
+    def get_step(self): 
+        # self.event_start = get_aware_utc_now()
+        step = (get_aware_utc_now - self.event_start).total_seconds()
+        return step
+
     def control_runner(self):
         _log.debug('running controls')
         now = datetime.now()
-        sched_df, active_testing_df, baseline_df  = self.read_schedule()
-        if now.strftime('%Y-%m-%d') not in sched_df.index:
+
+        if now.strftime('%Y-%m-%d') not in self.sched_df.index:
             _log.debug('date not in schedule, using baseline controls')
-            self.write_baseline_points(baseline_df)
+            self.write_baseline_points(self.baseline_df)
             return
 
         #sometimes this google sheet seems to change, and I'll have to get rid of or add [0]
         try: 
-            mode = sched_df.loc[now.strftime('%Y-%m-%d'), 'Mode']# [0]
+            mode = self.sched_df.loc[now.strftime('%Y-%m-%d'), 'Mode']# [0]
         except Exception as e:
             _log.debug(e)
-            mode = sched_df.loc[now.strftime('%Y-%m-%d'), 'Mode'][0]
+            mode = self.sched_df.loc[now.strftime('%Y-%m-%d'), 'Mode'][0]
             
         _log.debug(f'Mode is {mode}')
         if mode == "HeuristicShadowMode":
             try:
-                mpc_setpoints = run_app()
+                setpoints = run_app()
+                message = self.format_app_points(setpoints)
+                self.save_points(message)
             except Exception as e:
                 _log.debug('MPC has ERROR', e)
 
@@ -114,55 +134,49 @@ class BrickDRAgent(Agent):
         if mode == "HeuristicApplication":
             for i in range(0,2):    
                 try:
-                    mpc_setpoints = run_mpc()
+                    setpoints = run_app()
                 except Exception as e:
                     _log.debug(e)
                     # Wait and try again
                 else:
-                    self.write_mpc_points(mpc_setpoints)
+                    message = self.format_app_points(setpoints)
+                    self.actuate(message)
                     return
                 sleep(60)
-            #self.write_points(baseline_df)
             return
         
-    def write_mpc_points(self, point_dict):
+    def format_app_points(self, point_lst):
         message = []
-        for name,value in point_dict.items():
-            print(name)
-            message.append((name,value))
+        for i, val in enumerate(point_lst):
+            message.append((self.TsetZonPoint[i],val))
 
+        message = message + self.format_baseline_points(self.furnace_df)
         _log.debug(message)
-        self.actuate(message)
+        return message 
 
-        #  print('running get data cws')
-        # tz_local = timezone("America/Los_Angeles")
-        # end = get_aware_utc_now().astimezone(tz_local)
-        # start = end - datetime.timedelta(seconds=self.frequency)
-        # header_time = get_aware_utc_now()
-        # print('start: ', start, 'end: ', end)
-        # cws_data = self.get_data_cws(self.flexq_login, self.flex_user, self.flex_password)
-        # val_dict, metadata = self.filter_cws_data(cws_data, self.cws_point_map)
-        # metadata_dict = {}
-        # for key in metadata.keys():
-        #     metadata_dict[key] = {'units': metadata[key], 'tz': 'UTC', 'type': 'float'}
-        # headers = {
-        #     headers_mod.DATE: format_timestamp(header_time),
-        #     headers_mod.TIMESTAMP: format_timestamp(header_time)
-        # }
-        # topic = self.base_topic + 'all'
-        # message = [val_dict, metadata_dict]
-        # self._publish_wrapper(topic, headers, message)
-        # _log.info('get_cws_data complete')
+    def save_points(self, data):
+        # will save points to db using analysis/shadowmode topic
+        header_time = get_aware_utc_now()
+        metadata_dict = {}
+        data = {x[0]:x[1] for x in data}
+        for key in data.keys():
+            metadata_dict[key] = {'units': 'C', 'tz': 'UTC', 'type': 'float'}
+        
+        headers = {
+            headers_mod.DATE: format_timestamp(header_time),
+            headers_mod.TIMESTAMP: format_timestamp(header_time)
+        }
 
+        topic = 'analysis/brickdr/shadowmode'
 
+        message = [data, metadata_dict]
+        self._publish_wrapper(topic, headers, message)
+        _log.info('save_points complete')
 
     
-    def write_baseline_points(self, df):
+    def format_baseline_points(self, df):
         now = datetime.now()
         setpoints = df.loc[now.hour]
-        # JOIN devices TO ALL TOPIC NAMES
-        #message = [ ('devices/' + name, str(value) ) for name,value in setpoints.items() if not pd.isna(value) ]
-        #message = [ (name, value ) for name,value in setpoints.items() if not pd.isna(value) ]
         message = []
 
         for name, value in setpoints.items():
@@ -174,48 +188,40 @@ class BrickDRAgent(Agent):
                 tup = (name, str(value))
             message.append(tup)
 
-        # type issue, need to make the value types certain python types?
-        # make everything string or int
-        #message = [('sensibo/FCU1/targetTemperature', int(70))]
-
         _log.debug(message)
         
-        self.actuate(message)
-
-        # for loop or multipoint write
-        # for topic, value in setpoints.items():
-        #     self.call_actuator(topic, value)
+        return message
 
     def actuate(self,point_setting):
-        #will have to schedule all devices
-        # ON command should also be sent with MPC.
-        start = datetime.now()
-        end = datetime.now() + timedelta(minutes = self.frequency)
-        priority = 'LOW'
-        task_id = TASK_ID
-        task_id = str(random.randint(0,100000))
-        devices = ['devices/sensibo/FCU1','devices/sensibo/FCU2','devices/sensibo/FCU3','devices/sensibo/FCU4','devices/sensibo/FCU5',
-            'devices/ecobeeOffice','devices/ecobeeMainFloor'] 
+        return 
 
-        msg = [ [device, utils.format_timestamp(start), utils.format_timestamp(end)] for device in devices]
-        try:
-            result = self.vip.rpc.call('platform.actuator',
-                                        'request_new_schedule',
-                                           REQUESTER_ID,
-                                           task_id,
-                                           priority,
-                                           msg).get(timeout=10)
-        except Exception as e:
-            print(e)
-            _log.warning("Could not contact actuator. Is it running?")
-        _log.info("schedule result {}".format(result))
+        # start = datetime.now()
+        # end = datetime.now() + timedelta(minutes = self.frequency - 1)
+        # priority = 'LOW'
+        # task_id = TASK_ID
+        # task_id = str(random.randint(0,100000))
+        # devices = ['devices/sensibo/FCU1','devices/sensibo/FCU2','devices/sensibo/FCU3','devices/sensibo/FCU4','devices/sensibo/FCU5',
+        #     'devices/ecobeeOffice','devices/ecobeeMainFloor'] 
 
-        print(point_setting)
-        result = self.vip.rpc.call('platform.actuator',
-                                    'set_multiple_points',
-                                    REQUESTER_ID,
-                                    point_setting).get(timeout=20)
-        print(result)    
+        # msg = [ [device, utils.format_timestamp(start), utils.format_timestamp(end)] for device in devices]
+        # try:
+        #     result = self.vip.rpc.call('platform.actuator',
+        #                                 'request_new_schedule',
+        #                                    REQUESTER_ID,
+        #                                    task_id,
+        #                                    priority,
+        #                                    msg).get(timeout=10)
+        # except Exception as e:
+        #     print(e)
+        #     _log.warning("Could not contact actuator. Is it running?")
+        # _log.info("schedule result {}".format(result))
+
+        # print(point_setting)
+        # result = self.vip.rpc.call('platform.actuator',
+        #                             'set_multiple_points',
+        #                             REQUESTER_ID,
+        #                             point_setting).get(timeout=20)
+        # print(result)    
 
     def _publish_wrapper(self, topic, headers, message):
         while True:
@@ -238,12 +244,32 @@ class BrickDRAgent(Agent):
                 break
             else:
                 break
+            
+    def query_database(self):
+        print('RAN FUNC')
+        temps = self.vip.rpc.call("sqlhistorianagent-4.0.0_1", "query", 
+            # ["sensibo/FCU1/Temperature","sensibo/FCU2/Temperature","sensibo/FCU3/Temperature","sensibo/FCU4/Temperature","sensibo/FCU5/Temperature"],
+            self.TZonPoint,  
+            start = format_timestamp(get_aware_utc_now() - datetime.timedelta(minutes  = 10)),
+            end = format_timestamp(get_aware_utc_now()),
+            order = "LAST_TO_FIRST",
+            count = 1
+            )
+        
+        setpoints = self.vip.rpc.call("sqlhistorianagent-4.0.0_1", "query", 
+            # ["sensibo/FCU1/targetTemperature","sensibo/FCU2/targetTemperature","sensibo/FCU3/targetTemperature","sensibo/FCU4/targetTemperature","sensibo/FCU5/targetTemperature"], 
+            self.TsetZonPoint,
+            start = format_timestamp(get_aware_utc_now() - datetime.timedelta(minutes  = 10)),
+            end = format_timestamp(get_aware_utc_now()),
+            order = "LAST_TO_FIRST",
+            count = 1
+            )
 
-                    # self.write_dr_point()
-                    # self.dr_flag = False
-                    # self.write_baseline()
+        temps = { k: v[0][1] for k, v in temps.wait()['values'].items() }
+        setpoints = { k: v[0][1] for k, v in setpoints.wait()['values'].items() }
 
-
+        _log.debug([temps, setpoints])
+        return temps, setpoints
 
 def main():
     """Main method called to start the agent."""
