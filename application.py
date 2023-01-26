@@ -209,10 +209,21 @@ def get_setpoint(TZon, TsetZon, price, price_next_hour, step, TSetMin, TSetMax, 
 
         return new_TsetZon
 
-def main(TZonValues, TsetZonValues, equip, price, price_next_hour, step, TSetMin, TSetMax, price_threshold_value = 0.25):
+def main(TZonValues, TsetZonValues, equip, price, price_next_hour, steps, TSetMin, TSetMax, price_threshold_value = 0.25):
+    """
+    TZonValues: list[float], the Temperatures for each unit
+    TsetZonValues: list[float], the setpoints for each unit
+    equip: list[str], the URIs of each FCU
+    price: float, the current price
+    price_next_hour: float, the price 1 hour from current
+    steps: list[float], the amount of time in seconds since a preheat or shed event has started for each unit
+    TSetMin: float, the minimum allowed setpoint at that time 
+    TSetMax: float, the maximum allowed setpoint at that time
+    price_threshold_value: float, the price threshold for preheat or shed
+    """
     setpoints = []
     for i in range(len(equip)):
-        setpoint = get_setpoint(TZonValues[i], TsetZonValues[i], price, price_next_hour, step, TSetMin, TSetMax, price_threshold_value)
+        setpoint = get_setpoint(TZonValues[i], TsetZonValues[i], price, price_next_hour, steps[i], TSetMin, TSetMax, price_threshold_value)
         setpoints.append(setpoint)
         print("Equip: ", equip[i])
         print("Setpoint: ", setpoint)
@@ -229,21 +240,3 @@ step = 900
 TSetMin = 16
 TSetMax = 21
 main(TZonValues, TsetZonValues, equip, price, price_next_hour, step, TSetMin, TSetMax)
-
-
-# # %%
-# for i in [0, 900, 1800, 2700, 3600, 4500, 5400, 6300, 7200, 8100, 9000]:
-#     print(get_setpoint(19, 21, 0.27, 0.27, i, ))
-
-# # %%
-# for i in [0, 900, 1800, 2700, 3600, 4500, 5400, 6300, 7200, 8100, 9000]:
-#     print(get_setpoint(16, 16, 0.23, 0.27, i))
-
-# # %%
-
-# print(get_setpoint(21, 21, 0.23, 0.23, 1800))
-# print(get_setpoint(21, 21, 0.27, 0.27, 1800))
-# print(get_setpoint(16, 16, 0.27, 0.27, 1800))
-# # %%
-
-# %%

@@ -16,7 +16,7 @@ from volttron.platform.messaging import headers as headers_mod
 from volttron.platform.agent import utils
 from volttron.platform.vip.agent import Agent, Core, RPC
 from volttron.platform.scheduling import cron
-from VolttronSemantics.application import query, main
+from VolttronSemantics import application
 from time import sleep
 # import application
 
@@ -76,7 +76,10 @@ class BrickDRAgent(Agent):
 
         self.model_path = self.config.get('model_path')
 
-        self.TZonPoint, self.TsetZonPoint, self.equip = query(self.model_path)
+        self.TZonPoint, self.TsetZonPoint, self.equip = application.query(self.model_path)
+
+        self.steps = [0 for i in range(len(self.TZonPoint))]
+        self.event_starts = [ None for i in range(len(self.TZonPoint))]
 
         self.read_schedule()
         self.core.schedule(cron('0 */12 * * *'), self.control_runner)
@@ -99,11 +102,6 @@ class BrickDRAgent(Agent):
                     index_col='Time')
         self.furnace_df = pd.read_csv(self.baseline,
                     index_col='Time')
-    
-    def get_step(self): 
-        # self.event_start = get_aware_utc_now()
-        step = (get_aware_utc_now - self.event_start).total_seconds()
-        return step
 
     def control_runner(self):
         _log.debug('running controls')
@@ -111,7 +109,8 @@ class BrickDRAgent(Agent):
 
         if now.strftime('%Y-%m-%d') not in self.sched_df.index:
             _log.debug('date not in schedule, using baseline controls')
-            self.write_baseline_points(self.baseline_df)
+            setpoints = self.format_baseline_points(self.baseline_df)
+            self.actuate(setpoints)
             return
 
         #sometimes this google sheet seems to change, and I'll have to get rid of or add [0]
@@ -124,32 +123,72 @@ class BrickDRAgent(Agent):
         _log.debug(f'Mode is {mode}')
         if mode == "HeuristicShadowMode":
             try:
-                setpoints = run_app()
+                setpoints = self.run_app()
                 message = self.format_app_points(setpoints)
                 self.save_points(message)
             except Exception as e:
-                _log.debug('MPC has ERROR', e)
+                _log.debug(e)
 
             return
         if mode == "HeuristicApplication":
-            for i in range(0,2):    
-                try:
-                    setpoints = run_app()
-                except Exception as e:
-                    _log.debug(e)
-                    # Wait and try again
-                else:
-                    message = self.format_app_points(setpoints)
-                    self.actuate(message)
-                    return
-                sleep(60)
+            try:
+                setpoints = self.run_app()
+                save_message = self.format_app_points(setpoints)
+                self.save_points(save_message)
+
+                setpoints_adj = self.add_baseline_values(setpoints)
+                message = self.format_app_points(setpoints_adj)
+                self.actuate(message)
+                return
+
+            except Exception as e:
+                _log.debug(e)
+                setpoints = self.format_baseline_points(self.baseline_df)
+                self.actuate(setpoints)
+
             return
-        
+
+    def run_app(self):
+
+        self.update_steps(self.event_starts)
+        price, price_next_hour, TSetMax, TSetMin = self.get_parameters()
+        TZonValues, TsetZonValues = self.query_database()
+
+        setpoints = application.main(
+            TZonValues, TsetZonValues, self.equip,
+            price, price_next_hour, 
+            self.steps, TSetMin, TSetMax
+        )
+        self.update_events(setpoints)
+        return setpoints
+
+    def update_events(self, setpoints): 
+        for i, val in enumerate(setpoints):
+            if (val[1] == 1) & (self.event_starts[i] == None):
+                self.event_starts[i] = get_aware_utc_now()
+            else:
+                self.event_starts[i] = None
+    
+    def update_steps(self): 
+        for i, start in enumerate(self.event_starts):
+            if start == None:
+                self.steps[i] = 0
+            else:
+                step = (get_aware_utc_now() - start).total_seconds()
+                self.steps[i] = step
+
+    def add_baseline_values(self, setpoints):
+        baseline = self.format_baseline_points(self.baseline_df)
+        baseline_dict = [x[1] for x in baseline]
+        for i, val in enumerate(setpoints):
+            if val[1] == 0:
+                setpoints[i] = (baseline_dict[i], 0)
+        return setpoints
+
     def format_app_points(self, point_lst):
         message = []
         for i, val in enumerate(point_lst):
-            message.append((self.TsetZonPoint[i],val))
-
+            message.append((self.TsetZonPoint[i],val[0]))
         message = message + self.format_baseline_points(self.furnace_df)
         _log.debug(message)
         return message 
@@ -173,6 +212,13 @@ class BrickDRAgent(Agent):
         self._publish_wrapper(topic, headers, message)
         _log.info('save_points complete')
 
+    def get_parameters(self):
+        now = datetime.now()
+        price = self.prices_df.loc[now.hour]['Prices']
+        price_next_hour = self.prices_df.loc[now.hour + 1]['Prices']
+        TSetMax = price = self.prices_df.loc[now.hour]['TSetMax']
+        TSetMin = price = self.prices_df.loc[now.hour]['TSetMin']
+        return price, price_next_hour, TSetMax, TSetMin
     
     def format_baseline_points(self, df):
         now = datetime.now()
@@ -189,7 +235,6 @@ class BrickDRAgent(Agent):
             message.append(tup)
 
         _log.debug(message)
-        
         return message
 
     def actuate(self,point_setting):
