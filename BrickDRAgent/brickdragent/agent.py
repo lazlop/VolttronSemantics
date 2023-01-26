@@ -76,7 +76,7 @@ class BrickDRAgent(Agent):
 
         self.model_path = self.config.get('model_path')
 
-        self.TZonPoint, self.TsetZonPoint, self.equip = application.query(self.model_path)
+        self.TZonPoint, self.TsetZonPoint, self.equip = application.query_model(self.model_path)
 
         self.steps = [0 for i in range(len(self.TZonPoint))]
         self.event_starts = [ None for i in range(len(self.TZonPoint))]

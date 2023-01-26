@@ -2,56 +2,11 @@
 
 # %%
 import rdflib
-
-g = rdflib.Graph()
-g.parse("building_model.ttl")
-
-query = """
-SELECT DISTINCT *
-WHERE {
-    ?zone a brick:HVAC_Zone .
-    ?equip brick:feeds ?zone ;
-        a brick:FCU ;
-        brick:hasPoint ?TZon, ?TsetZon .
-
-    ?TZon a brick:Air_Temperature_Sensor ;
-      ref:hasExternalReference/ref:hasTimeseriesId ?TZonPoint  .
-
-    ?TsetZon a brick:Air_Temperature_Setpoint ;
-      ref:hasExternalReference/ref:hasTimeseriesId ?TsetZonPoint  .
-    
-}"""
-
-# %%
-# Get data points to instantiate control points per zone
-qres = g.query(query)
-
-zone = []
-zone_name = []
-TZonPoint = []
-TsetZonPoint = []
-
-for row in qres:
-    zone.append (str(row.zone))
-    zone_name.append(str(row.zone[14:-5]))
-    TZonPoint.append (str(row.TZonPoint))
-    TsetZonPoint.append (str(row.TsetZonPoint))
-
-    # Print points from query
-    print(f"{row.zone} {row.TZonPoint} {row.TsetZonPoint}")
-
-print(TZonPoint)
-
-# %%
-for x in range(len(zone)):
-    print ("TempSensorPoint",TZonPoint[x])
-    print ("TempSetPoint",TsetZonPoint[x])
-
 # %%
 # functions
 def query_model(filepath):
     g = rdflib.Graph()
-    g.parse(filepath)
+    g.parse(filepath, format = 'ttl')
 
     equip = []
     TZonPoint = []
@@ -180,9 +135,6 @@ def preheat_TsetZon (TsetZon, TSet_adj_current, TSetMax):
         enable_command = 1
         return new_TsetZon, enable_command
 
-# %% 
-query_model("building_model.ttl")
-
 # %%
      
 def get_setpoint(TZon, TsetZon, price, price_next_hour, step, TSetMin, TSetMax, price_threshold_value):
@@ -231,12 +183,12 @@ def main(TZonValues, TsetZonValues, equip, price, price_next_hour, steps, TSetMi
     return setpoints
 
 # %%
-TZonValues = [19.1, 20, 17, 18, 19]
-TsetZonValues = [16, 16, 16, 16, 16]
-equip = [1, 2, 3, 4, 5]
-price = 0.23
-price_next_hour = 0.28
-step = 900
-TSetMin = 16
-TSetMax = 21
-main(TZonValues, TsetZonValues, equip, price, price_next_hour, step, TSetMin, TSetMax)
+# TZonValues = [19.1, 20, 17, 18, 19]
+# TsetZonValues = [16, 16, 16, 16, 16]
+# equip = [1, 2, 3, 4, 5]
+# price = 0.23
+# price_next_hour = 0.28
+# step = 900
+# TSetMin = 16
+# TSetMax = 21
+# main(TZonValues, TsetZonValues, equip, price, price_next_hour, step, TSetMin, TSetMax)
