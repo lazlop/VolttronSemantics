@@ -16,7 +16,7 @@ from volttron.platform.messaging import headers as headers_mod
 from volttron.platform.agent import utils
 from volttron.platform.vip.agent import Agent, Core, RPC
 from volttron.platform.scheduling import cron
-from VolttronSemantics import application
+from VolttronSemantics.application import query_model
 from time import sleep
 # import application
 

@@ -1,6 +1,9 @@
 {
-    "schedule":
-    "baseline":
-    "prices":
-    "model_path":
+    "schedule": null,
+    "baseline": null,
+    "furnace": null,
+    "prices": null,
+    "TZonPoint": null,
+    "TsetZonPoint": null,
+    "equip": null
 }
