@@ -98,12 +98,14 @@ def shed_TsetZon (TsetZon, TSet_adj_current, TSetMin):
     else:
         if TsetZon - TSet_adj_current > TSetMin:
             offset = TSet_adj_current
+            new_TsetZon =  TsetZon - offset
                                     
         else:
             # Should this set to min rather than using 0 offset?
-            offset = 0 
+            print('SetMin', TSetMin)
+            new_TsetZon = TSetMin
                 
-        new_TsetZon =  TsetZon - offset
+        # new_TsetZon =  TsetZon - offset
         enable_command = 1
         return new_TsetZon, enable_command
 
@@ -183,12 +185,15 @@ def main(TZonValues, TsetZonValues, equip, price, price_next_hour, steps, TSetMi
     return setpoints
 
 # %%
-# TZonValues = [19.1, 20, 17, 18, 19]
-# TsetZonValues = [16, 16, 16, 16, 16]
-# equip = [1, 2, 3, 4, 5]
-# price = 0.23
-# price_next_hour = 0.28
-# step = 900
-# TSetMin = 16
-# TSetMax = 21
-# main(TZonValues, TsetZonValues, equip, price, price_next_hour, step, TSetMin, TSetMax)
+TZonValues = [19.1, 20, 17, 18, 19]
+TsetZonValues = [20, 20, 20, 20, 20]
+equip = [1, 2, 3, 4, 5]
+price = 0.28
+price_next_hour = 0.28
+step = [900,900,900,900,900]
+TSetMin = 19
+TSetMax = 21
+a = main(TZonValues, TsetZonValues, equip, price, price_next_hour, step, TSetMin, TSetMax)
+print(a)
+
+# %%
