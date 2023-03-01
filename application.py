@@ -88,11 +88,10 @@ def shed_TsetZon (TsetZon, TSet_adj_current, TSetMin):
         for i in range(len(TSetMin)):                      
             if TsetZon - TSet_adj_current > TSetMin [i]:
                 offset = TSet_adj_current
+                new_TsetZon =  TsetZon - offset
                                     
             else:
-                offset = 0 
-                
-            new_TsetZon =  TsetZon - offset
+                new_TsetZon = TSetMin
             enable_command = 1
             return new_TsetZon, enable_command
     else:
@@ -102,7 +101,7 @@ def shed_TsetZon (TsetZon, TSet_adj_current, TSetMin):
                                     
         else:
             # Should this set to min rather than using 0 offset?
-            print('SetMin', TSetMin)
+            # offset = 0
             new_TsetZon = TSetMin
                 
         # new_TsetZon =  TsetZon - offset
@@ -127,13 +126,14 @@ def preheat_TsetZon (TsetZon, TSet_adj_current, TSetMax):
     else:
         if TsetZon + TSet_adj_current < TSetMax:  
             offset = TSet_adj_current
+            new_TsetZon =  TsetZon + offset
                                     
         else:
             # Shouldln't this just set it to max or min then?
             # offset = 0 
-            offset = TSetMax - TsetZon
+            new_TsetZon = TSetMax
                 
-        new_TsetZon =  TsetZon + offset
+        # new_TsetZon =  TsetZon + offset
         enable_command = 1
         return new_TsetZon, enable_command
 
@@ -146,22 +146,26 @@ def get_setpoint(TZon, TsetZon, price, price_next_hour, step, TSetMin, TSetMax, 
     """
     TSet_adj_current = get_adj(step)
 
-    if runaway_condition(TZon, TSetMin, TSetMax):
-        # Disable Controls
-        return None
+    # if runaway_condition(TZon, TSetMin, TSetMax):
+    #     # Disable Controls
+    #     return None
     
     if price_event(price, price_threshold_value):
         # Run Shed
+        print("in shed")
         new_TsetZon = shed_TsetZon(TsetZon, TSet_adj_current, TSetMin)
-
+        print(price)
         return new_TsetZon
     
     #testing price event for next hour 
     if price_event(price_next_hour, price_threshold_value):
         # Run Shed
+        print("in preheat")
         new_TsetZon = preheat_TsetZon(TsetZon, TSet_adj_current, TSetMax)
 
         return new_TsetZon
+
+    return ((TSetMin + TSetMax)/2, 0)
 
 def main(TZonValues, TsetZonValues, equip, price, price_next_hour, steps, TSetMin, TSetMax, price_threshold_value = 0.25):
     """
@@ -175,6 +179,9 @@ def main(TZonValues, TsetZonValues, equip, price, price_next_hour, steps, TSetMi
     TSetMax: float, the maximum allowed setpoint at that time
     price_threshold_value: float, the price threshold for preheat or shed
     """
+    print('TSetMin', TSetMin)
+    print('TSetMax', TSetMax)
+    print('PRICE', price)
     setpoints = []
     for i in range(len(equip)):
         setpoint = get_setpoint(TZonValues[i], TsetZonValues[i], price, price_next_hour, steps[i], TSetMin, TSetMax, price_threshold_value)
