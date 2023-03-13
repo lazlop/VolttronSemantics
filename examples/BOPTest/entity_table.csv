@@ -1,6 +1,0 @@
-URI,comment,type,config,point_list,base_topic
-hvacZone,singlezonemodel,Zone,bacnet.config,point_list.csv,BOPTest/singlezone_commercial_hvac
-building,,Building
-space,,Space
-hvacZone,,Zone
-
