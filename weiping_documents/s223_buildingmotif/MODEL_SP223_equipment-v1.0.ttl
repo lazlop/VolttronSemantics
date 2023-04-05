@@ -1,0 +1,1647 @@
+# baseURI: http://data.ashrae.org/standard223/1.0/model/device
+# imports: http://data.ashrae.org/standard223/1.0/model/all
+
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix qudt: <http://qudt.org/schema/qudt/> .
+@prefix qudtqk: <http://qudt.org/vocab/quantitykind/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix s223: <http://data.ashrae.org/standard223#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix spin: <http://spinrdf.org/spin#> .
+@prefix unit: <http://qudt.org/vocab/unit/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+s223:AbstractSensor
+  a s223:Class ;
+  a sh:NodeShape ;
+  s223:abstract true ;
+  rdfs:comment "This is an abstract class that represents properties that are common to all sensor types." ;
+  rdfs:label "Abstract sensor" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+      sh:path s223:hasMeasurementResolution ;
+      rdfs:comment "A Sensor can be associated with a QuantifiableProperty by hasMeasurementResolution" ;
+      sh:class s223:QuantifiableProperty ;
+    ] ;
+  sh:property [
+      sh:path s223:observes ;
+      rdfs:comment "A Sensor can be associated with at most 1 ObservableProperty by observes" ;
+      sh:class s223:ObservableProperty ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+    ] ;
+.
+s223:Actuator
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Actuator" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+      sh:path s223:commandedByProperty ;
+      rdfs:comment "An instance of Actuator must be associated with any number of actuatable property instances using the relation 'commanded by Property'." ;
+      sh:class s223:ActuatableProperty ;
+      sh:minCount 1 ;
+    ] ;
+.
+
+# weiping modified 02022023
+s223:AirHandlingUnit
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "AHU" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "An AirHandlingUnit must provide service using Air.";
+      sh:qualifiedMinCount 1 ; 
+      sh:minCount 2 ;
+      sh:qualifiedValueShape [
+          sh:class s223:InletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Air ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "An AirHandlingUnit must provide service using Air.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:OutletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Air ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+.
+# weiping modified 02022023
+s223:Battery
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Battery" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:or (
+      [
+        sh:property [
+            sh:path s223:hasConnectionPoint ;
+            rdfs:comment "A Battery may provide Electricity, or both provide and receive Electricity.";
+            sh:qualifiedMinCount 1 ; 
+            sh:minCount 1 ;
+            sh:qualifiedValueShape [
+                sh:class s223:OutletConnectionPoint ;
+                sh:node [
+                    sh:property [
+                        sh:path s223:hasMedium ;
+                        sh:class s223:Medium-Electricity ;
+                      ] ;
+                  ] ;
+              ] ;
+          ] ;
+      ]
+      [
+        sh:property [
+            sh:path s223:hasConnectionPoint ;
+            rdfs:comment "A Battery may provide Electricity, or both provide and receive Electricity.";
+            sh:qualifiedMinCount 1 ; 
+            sh:minCount 1 ; 
+            sh:qualifiedValueShape [
+                sh:class s223:BidirectionalConnectionPoint ;
+                sh:node [
+                    sh:property [
+                        sh:path s223:hasMedium ;
+                        sh:class s223:Medium-Electricity ;
+                      ] ;
+                  ] ;
+              ] ;
+          ] ;
+      ]
+    ) ;
+.
+# weiping modified 02022023
+s223:Boiler
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Boiler" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+    sh:minCount 2 ;
+    sh:path s223:hasConnectionPoint ;
+  ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A Boiler must provide service using Water.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:InletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Water ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A Boiler must provide service using Water.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:OutletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Water ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+.
+
+# weiping modified 02022023
+# Can just be wrapped into Radiant System optionally
+s223:ChilledBeam
+  a s223:Class;
+  a sh:NodeShape ;
+  rdfs:label "Chilled Beam" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+    sh:minCount 2 ;
+    sh:path s223:hasConnectionPoint ;
+  ] ;
+  sh:property [
+    sh:path s223:hasRole ;
+    rdfs:comment "A ChilledBeam must be associated with the Role-Cooling by hasRole" ;
+    sh:qualifiedMinCount 1 ; 
+    sh:minCount 1 ;
+    sh:qualifiedValueShape  [
+      sh:class s223:Role-Cooling ;
+    ] ;
+  ] ;
+  sh:property [
+    sh:path s223:hasConnectionPoint ;
+    rdfs:comment "A ChilledBeam must provide service using Water.";
+    sh:qualifiedMinCount 1 ; 
+    sh:qualifiedValueShape [
+        sh:class s223:InletConnectionPoint ;
+        sh:node [
+            sh:property [
+                sh:path s223:hasMedium ;
+                sh:class s223:Medium-Water ;
+              ] ;
+          ] ;
+      ] ;
+  ] ;
+  sh:property [
+    sh:path s223:hasConnectionPoint ;
+    rdfs:comment "A ChilledBeam must provide service using Water.";
+    sh:qualifiedMinCount 1 ; 
+    sh:qualifiedValueShape [
+        sh:class s223:OutletConnectionPoint ;
+        sh:node [
+            sh:property [
+                sh:path s223:hasMedium ;
+                sh:class s223:Medium-Water ;
+              ] ;
+          ] ;
+      ] ;
+  ] ;
+.
+# weiping modified 02022023
+s223:Chiller
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Chiller" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+    sh:minCount 2 ;
+    sh:path s223:hasConnectionPoint ;
+  ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A Chiller must provide service using Water.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:InletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Water ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A Chiller must provide service using Water.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:OutletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Water ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+.
+# weiping modified 02022023
+s223:Coil
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Coil" ;
+  rdfs:subClassOf s223:HeatExchanger ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A Coil must provide service using Air.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:InletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Air ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A Coil must provide service using Air.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:OutletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Air ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+.
+# weiping modified 02022023
+s223:Compressor
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Compressor" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+    sh:minCount 2 ;
+    sh:path s223:hasConnectionPoint ;
+  ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A Compressor must be associated with at least 1 InletConnectionPoint using the relation hasConnectionPoint.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:InletConnectionPoint ;
+        ] ;
+    ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A Compressor must be associated with at least 1 OutletConnectionPoint using the relation hasConnectionPoint.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:OutletConnectionPoint ;
+        ] ;
+    ] ;
+.
+s223:Controller
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Controller" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+      sh:path s223:executes ;
+      rdfs:comment "An instance of Controller can be associated with any number of Function block instances using the relation 'executes'." ;
+      sh:class s223:FunctionBlock ;
+    ] ;
+.
+# weiping modified 02022023
+# weiping added
+s223:CoolingTower
+  a s223:Class;
+  a sh:NodeShape ;
+  rdfs:label "Cooling tower" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+    sh:minCount 2 ;
+    sh:path s223:hasConnectionPoint ;
+  ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A CoolingTower must provide service using Water.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:InletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Water ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A CoolingTower must provide service using Water.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:OutletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Water ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+.
+# weiping modified 02022023
+s223:Damper
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Damper" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+    sh:minCount 2 ;
+    sh:path s223:hasConnectionPoint ;
+  ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A Damper must provide service using Air.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:InletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Air ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A Damper must provide service using Air.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:OutletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Air ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+.
+# weiping modified 02022023
+s223:DifferentialSensor
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Differential sensor" ;
+  rdfs:subClassOf s223:AbstractSensor ;
+      sh:xone (
+          [
+            sh:property [
+                sh:path s223:hasMeasurementLocationHigh ;
+                rdfs:comment "A DifferentialSensor must be associated with exactly 1 of Connectable, Connection, Segment, or ConnectionPoint by hasMeasurementLocationHigh.";
+                sh:class s223:Connectable ;
+              ] ;
+          ]
+          [
+            sh:property [
+                sh:path s223:hasMeasurementLocationHigh ;
+                rdfs:comment "A DifferentialSensor must be associated with exactly 1 of Connectable, Connection, Segment, or ConnectionPoint by hasMeasurementLocationHigh.";
+                sh:class s223:Connection ;
+              ] ;
+          ]
+          [
+            sh:property [
+                sh:path s223:hasMeasurementLocationHigh ;
+                rdfs:comment "A DifferentialSensor must be associated with exactly 1 of Connectable, Connection, Segment, or ConnectionPoint by hasMeasurementLocationHigh.";
+                sh:class s223:Segment ;
+              ] ;
+          ]
+          [
+            sh:property [
+                sh:path s223:hasMeasurementLocationHigh ;
+                rdfs:comment "A DifferentialSensor must be associated with exactly 1 of Connectable, Connection, Segment, or ConnectionPoint by hasMeasurementLocationHigh.";
+                sh:class s223:ConnectionPoint ;
+              ] ;
+          ]
+        ) ;
+      sh:xone (
+          [
+            sh:property [
+                sh:path s223:hasMeasurementLocationLow ;
+                rdfs:comment "A DifferentialSensor must be associated with exactly 1 of Connectable, Connection, Segment, or ConnectionPoint by hasMeasurementLocationLow.";
+                sh:class s223:Connectable ;
+              ] ;
+          ]
+          [
+            sh:property [
+                sh:path s223:hasMeasurementLocationLow ;
+                rdfs:comment "A DifferentialSensor must be associated with exactly 1 of Connectable, Connection, Segment, or ConnectionPoint by hasMeasurementLocationLow.";
+                sh:class s223:Connection ;
+              ] ;
+          ]
+          [
+            sh:property [
+                sh:path s223:hasMeasurementLocationLow ;
+                rdfs:comment "A DifferentialSensor must be associated with exactly 1 of Connectable, Connection, Segment, or ConnectionPoint by hasMeasurementLocationLow.";
+                sh:class s223:Segment ;
+              ] ;
+          ]
+          [
+            sh:property [
+                sh:path s223:hasMeasurementLocationLow ;
+                rdfs:comment "A DifferentialSensor must be associated with exactly 1 of Connectable, Connection, Segment, or ConnectionPoint by hasMeasurementLocationLow.";
+                sh:class s223:ConnectionPoint ;
+              ] ;
+          ]
+        ) ;
+  sh:property [
+      sh:path (
+          s223:observes
+          qudt:hasQuantityKind
+        ) ;
+      rdfs:comment "A Differential Sensor must be defined in terms of the QuantityKind that is being measured" ;
+      sh:class qudt:QuantityKind ;
+      sh:minCount 1 ;
+    ] ;
+.
+# weiping modified 02022023
+s223:Door
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Door" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+    sh:minCount 2 ;
+    sh:path s223:hasConnectionPoint ;
+  ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A Door must have ConnectionPoints with the medium Medium-Air.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:InletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Air ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A Door must have ConnectionPoints with the medium Medium-Air.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:OutletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Air ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+.
+
+# weiping modified 02022023
+s223:DualDuctTerminal
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Dual duct air terminal." ;
+  rdfs:label "A dual duct air terminal mixes two independent sources of primary air." ;
+  rdfs:seeAlso s223:TerminalUnit ;
+  rdfs:subClassOf s223:TerminalUnit ;
+  sh:property [
+    sh:minCount 3 ;
+    sh:path s223:hasConnectionPoint ;
+  ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A DualDuctTerminal must absorb 2 sources of Air.";
+      sh:qualifiedMinCount 2 ;
+      sh:qualifiedValueShape [
+          sh:class s223:InletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Air ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+.
+# weiping modified 02022023
+s223:Economizer
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Economizer" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+    sh:minCount 2 ;
+    sh:path s223:hasConnectionPoint ;
+  ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "An Economizer must provide service using Air.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:InletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Air ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "An Economizer must provide service using Air.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:OutletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Air ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+.
+# weiping modified 02022023
+s223:ElectricBreaker
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Electric breaker" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+    sh:minCount 1 ;
+    sh:path s223:hasConnectionPoint ;
+  ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "An ElectricBreaker must provide Electricity.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:OutletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Electricity ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+.
+s223:ElectricMeter
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Electric meter" ;
+  rdfs:subClassOf s223:Equipment ;
+.
+# weiping modified 02022023
+s223:ElectricOutlet
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "ElectricOutlet" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+    sh:minCount 2 ;
+    sh:path s223:hasConnectionPoint ;
+  ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "An ElectricOutlet must provide service using Electricity.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:InletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Electricity ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "An ElectricOutlet must provide service using Electricity.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:OutletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Electricity ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+.
+# weiping modified 02022023
+s223:ElectricTransformer
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Transformer" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+    sh:minCount 2 ;
+    sh:path s223:hasConnectionPoint ;
+  ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "An ElectricTransformer must provide service using Electricity.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:InletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Electricity ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "An ElectricTransformer must provide service using Electricity.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:OutletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Electricity ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+.
+s223:Equipment
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:comment "A Equipment is the modeling construct used to represent a mechanical device designed to accomplish a specific task that one might buy from a vendor. Examples of possible devices include a pump, fan, heat exchanger, luminaire, temperature sensor, or flow meter." ;
+  rdfs:label "Equipment" ;
+  rdfs:subClassOf s223:Connectable ;
+  sh:property s223:hasPropertyShape ;
+  sh:property [
+      a sh:PropertyShape ;
+      sh:path s223:contains ;
+      rdfs:comment "A Equipment can be associated with Equipment by contains" ;
+      sh:class s223:Equipment ;
+      sh:minCount 0 ;
+      sh:name "device contains shape" ;
+    ] ;
+  sh:property [
+      sh:path s223:commandedByProperty ;
+      rdfs:comment "A Equipment can be associated with an ActuatableProperty by commandedByProperty" ;
+      sh:class s223:ActuatableProperty ;
+    ] ;
+  sh:property [
+      sh:path s223:hasPhysicalLocation ;
+      rdfs:comment "A Equipment can be associated with a PhysicalSpace by hasPhysicalLocation" ;
+      sh:class s223:PhysicalSpace ;
+    ] ;
+  sh:property [
+      sh:path s223:hasRole ;
+      rdfs:comment "A Equipment can be associated with an EnumerationKind-Role by hasRole" ;
+      sh:class s223:EnumerationKind-Role ;
+    ] ;
+.
+# weiping modified 02022023
+# weiping added
+s223:EthernetSwitch
+  a s223:Class;
+  a sh:NodeShape ;
+  rdfs:label "Ethernet switch" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "An EthernetSwitch must have at least one bidirectional connection point.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:BidirectionalConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Electricity ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+.
+# weiping modified 02022023
+s223:Fan
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Fan" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+    sh:minCount 2 ;
+    sh:path s223:hasConnectionPoint ;
+  ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A Fan must provide service using Air.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:InletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Air ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A Fan must provide service using Air.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:OutletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Air ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+.
+# weiping modified 02022023
+# weiping added
+s223:FanCoilUnit
+  a s223:Class;
+  a sh:NodeShape ;
+  rdfs:label "Fan coil unit" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+    sh:minCount 2 ;
+    sh:path s223:hasConnectionPoint ;
+  ] ;
+  sh:property [
+    sh:path s223:hasRole ;
+    rdfs:comment "A FanCoilUnit must at least have the role Role-Heating or Role-Cooling." ;
+    sh:minCount 1 ;
+    sh:qualifiedMinCount 1 ; 
+    sh:qualifiedValueShape  [
+      sh:in (s223:Role-Heating s223:Role-Cooling) ;
+    ] ;
+  ] ;
+  sh:property [
+      sh:path s223:contains ;
+      sh:minCount 2; 
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:Fan ;
+        ] ;
+    ] ;
+  sh:or (
+    sh:property [
+      sh:path s223:contains ;
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:Coil ;
+        ] ;
+    ]
+    sh:property [
+      sh:path s223:contains ;
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:Coil ;
+        ] ;
+    ]
+  ) ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A FanCoilUnit must provide service using Air.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:InletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Air ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A FanCoilUnit must provide service using Air.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:OutletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Air ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+.
+# weiping modified 02022023
+s223:FanPoweredTerminal
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Fan Powered Air Terminal" ;
+  rdfs:comment "An air terminal containing a fan. Airflow may pass through or be parallel to the fan. These units may also have supplemental heating or cooling." ;
+  rdfs:subClassOf s223:TerminalUnit ;
+  sh:property [
+    sh:path s223:contains ;
+    rdfs:comment "A FanPoweredTerminal must be associated with at least 1 Fan by contains" ;
+    sh:qualifiedMinCount 1 ; 
+    sh:minCount 1; 
+    sh:qualifiedValueShape [
+      sh:class s223:Fan ;
+    ]
+  ]
+.
+# weiping modified 02022023
+s223:Filter
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Filter" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+    sh:minCount 2 ;
+    sh:path s223:hasConnectionPoint ;
+  ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A Filter must be associated with at least 1 InletConnectionPoint using the relation hasConnectionPoint.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:InletConnectionPoint ;
+        ] ;
+    ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A Filter must be associated with at least 1 OutletConnectionPoint using the relation hasConnectionPoint.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:OutletConnectionPoint ;
+        ] ;
+    ] ;
+.
+
+# weiping modified 02022023
+# weiping added
+s223:FumeHood
+  a s223:Class;
+  a sh:NodeShape ;
+  rdfs:label "Fume hood" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+    sh:minCount 2 ;
+    sh:path s223:hasConnectionPoint ;
+  ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A FumeHood must provide service using Air.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:InletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Air ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A FumeHood must provide service using Air.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:OutletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Air ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+.
+# weiping modified 02022023
+s223:Furnace
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Furnace" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+    sh:minCount 2 ;
+    sh:path s223:hasConnectionPoint ;
+  ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A Furnace must provide Air.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:OutletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Air ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+    sh:property [
+      sh:path s223:hasConnectionPoint ;
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:InletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Air ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+.
+# weiping modified 02022023
+s223:Generator
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Generator" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+    sh:minCount 1 ;
+    sh:path s223:hasConnectionPoint ;
+  ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A Generator must provide Electricity.";
+      sh:class s223:OutletConnectionPoint ;
+      sh:minCount 1 ;
+      sh:node [
+          sh:property [
+              sh:path s223:hasMedium ;
+              sh:class s223:Medium-Electricity ;
+            ] ;
+        ] ;
+    ] ;
+.
+
+# weiping modified 02022023
+s223:HeatExchanger
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Heat exchanger" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+    sh:minCount 4 ;
+    sh:path s223:hasConnectionPoint ;
+  ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A HeatExchanger must be associated with at least 2 InletConnectionPoint using the relation hasConnectionPoint.";
+      sh:qualifiedMinCount 2 ;
+      sh:qualifiedValueShape [
+          sh:class s223:InletConnectionPoint ;
+        ] ;
+    ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A HeatExchanger must be associated with at least 2 OutletConnectionPoint using the relation hasConnectionPoint.";
+      sh:qualifiedMinCount 2 ;
+      sh:qualifiedValueShape [
+          sh:class s223:OutletConnectionPoint ;
+        ] ;
+    ] ;
+  sh:property [
+      sh:path s223:hasRole ;
+      rdfs:comment "A HeatExchanger can only have HeatExchanger roles" ;
+      sh:class s223:Role-HeatExchanger ;
+    ] ;
+.
+# weiping modified 02022023
+s223:HeatPump
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "HeatPump" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+    sh:minCount 2 ;
+    sh:path s223:hasConnectionPoint ;
+  ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A HeatPump must provide service using Air.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:InletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Air ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A HeatPump must provide service using Air.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:OutletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Air ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+.
+s223:Humidifier
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Humidifier" ;
+  rdfs:subClassOf s223:Equipment ;
+.
+s223:Humidistat
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Humidistat" ;
+  rdfs:subClassOf s223:Equipment ;
+.
+# weiping modified 02022023
+s223:Inverter
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Inverter" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+    sh:minCount 2 ;
+    sh:path s223:hasConnectionPoint ;
+  ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "An Inverter must provide service using Electricity.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:InletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Electricity ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "An Inverter must provide service using Electricity.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:OutletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Electricity ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+.
+# weiping modified 02022023
+s223:Luminaire
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Luminaire" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+    sh:minCount 2 ;
+    sh:path s223:hasConnectionPoint ;
+  ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A Luminaire must absorb Electricity.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:InletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Electricity ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A Luminaire must provide Light.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:OutletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Light ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+.
+# weiping modified 02022023
+s223:Pump
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Pump" ;
+  rdfs:subClassOf s223:FlowEquipment ;
+  sh:property [
+    sh:minCount 2 ;
+    sh:path s223:hasConnectionPoint ;
+  ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A Pump must provide service using Water.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:InletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Water ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A Pump must provide service using Water.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:OutletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Water ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+.
+#Should this be renamed to RadiantSystem, to be more inclusive
+# Could split this into subclasses if we want.
+s223:RadiantPanel
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "RadiantPanel" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+    sh:path s223:hasRole ;
+    rdfs:comment "A radiant panel may provide service using electricity, natural gas, or water" ;
+    sh:qualifiedMinCount 1 ; 
+    sh:minCount 1 ;
+    sh:qualifiedValueShape [
+      sh:class s223:Role-Heating ;
+    ] ;
+  ] ;
+  sh:or (
+      [
+        sh:property [
+            sh:path s223:hasConnectionPoint ;
+            rdfs:comment "A radiant panel may provide service using electricity, natural gas, or water" ;
+            sh:qualifiedMinCount 1 ; 
+            sh:minCount 1 ;
+            sh:qualifiedValueShape [
+                sh:class s223:InletConnectionPoint ;
+                sh:node [
+                    sh:property [
+                        sh:path s223:hasMedium ;
+                        sh:class s223:Medium-Electricity ;
+                      ] ;
+                  ] ;
+              ] ;
+          ] ;
+      ]
+      [
+        sh:property [
+            sh:path s223:hasConnectionPoint ;
+            rdfs:comment "A radiant panel may provide service using electricity, natural gas, or water" ;
+            sh:qualifiedMinCount 1 ; 
+            sh:minCount 1 ;
+            sh:qualifiedValueShape [
+                sh:class s223:InletConnectionPoint ;
+                sh:node [
+                    sh:property [
+                        sh:path s223:hasMedium ;
+                        sh:class s223:Medium-NaturalGas ;
+                      ] ;
+                  ] ;
+              ] ;
+          ] ;
+      ]
+      [
+        sh:property [
+            sh:path s223:hasConnectionPoint ;
+            rdfs:comment "A radiant panel may provide service using electricity, natural gas, or water" ;
+            sh:qualifiedMinCount 1 ; 
+            sh:minCount 2 ;
+            sh:qualifiedValueShape [
+                sh:class s223:InletConnectionPoint ;
+                sh:node [
+                    sh:property [
+                        sh:path s223:hasMedium ;
+                        sh:class s223:Medium-Water ;
+                      ] ;
+                  ] ;
+              ] ;
+          ] ;
+          sh:property [
+            sh:path s223:hasConnectionPoint ;
+            rdfs:comment "A radiant panel may provide service using electricity, natural gas, or water" ;
+            sh:qualifiedMinCount 1 ; 
+            sh:qualifiedValueShape [
+                sh:class s223:OutletConnectionPoint ;
+                sh:node [
+                    sh:property [
+                        sh:path s223:hasMedium ;
+                        sh:class s223:Medium-Water ;
+                      ] ;
+                  ] ;
+              ] ;
+          ] ;
+      ]
+    ) ;
+.
+# Does a baseboard radiator need to 
+s223:Radiator
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Radiator" ;
+  rdfs:comment "A radiator provides heating to a room using electricity, steam or water (e.g., electric baseboard heaters)." ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+    sh:path s223:hasRole ;
+    sh:qualifiedMinCount 1 ; 
+    sh:minCount 1;
+    rdfs:comment "Radiators must have the role Role-Heating." ;
+    sh:qualifiedValueShape [
+      sh:class s223:Role-Heating ;
+    ] ;
+  ] ;
+  sh:or (
+      [
+        sh:property [
+            sh:path s223:hasConnectionPoint ;
+            rdfs:comment "A radiator may provide service using electricity, steam, or water." ;
+            sh:qualifiedMinCount 1 ; 
+            sh:minCount 1 ; 
+            sh:qualifiedValueShape [
+                sh:class s223:InletConnectionPoint ;
+                sh:node [
+                    sh:property [
+                        sh:path s223:hasMedium ;
+                        sh:class s223:Medium-Electricity ;
+                      ] ;
+                  ] ;
+              ] ;
+          ] ;
+      ]
+      [
+        sh:property [
+            sh:path s223:hasConnectionPoint ;
+            rdfs:comment "A radiator may provide service using electricity, steam, or water." ; 
+            sh:qualifiedMinCount 1 ; 
+            sh:minCount 1 ;
+            sh:qualifiedValueShape [
+                sh:class s223:InletConnectionPoint ;
+                sh:node [
+                    sh:property [
+                        sh:path s223:hasMedium ;
+                        sh:class s223:Medium-Water ;
+                      ] ;
+                  ] ;
+              ] ;
+          ] ;
+          sh:property [
+            sh:path s223:hasConnectionPoint ;
+            rdfs:comment "A radiator may provide service using electricity, steam, or water." ; 
+            sh:qualifiedMinCount 1 ; 
+            sh:minCount 2 ; 
+            sh:qualifiedValueShape [
+                sh:class s223:OutletConnectionPoint ;
+                sh:node [
+                    sh:property [
+                        sh:path s223:hasMedium ;
+                        sh:class s223:Medium-Water ;
+                      ] ;
+                  ] ;
+              ] ;
+          ] ;
+      ]
+    ) ;
+.
+
+# weiping modified 02022023
+# weiping added
+s223:ResistanceHeater
+  a s223:Class;
+  a sh:NodeShape ;
+  rdfs:label "Electrical Resistance Heater" ;
+  rdfs:comment "Resistance heaters provide electrical resistance heating, for example an electric heating coil within a Fan Coil Unit." ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+    sh:path s223:hasRole ;
+    rdfs:comment "ResistanceHeaters must have the role Role-Heating." ;
+    sh:qualifiedMinCount 1 ; 
+    sh:minCount 1 ;
+    sh:qualifiedValueShape [
+      sh:class s223:Role-Heating ;
+    ] ;
+  ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A ResistanceHeater must receive Electricity.";
+      sh:qualifiedMinCount 1 ; 
+      sh:minCount 1 ;
+      sh:qualifiedValueShape [
+          sh:class s223:InletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Electricity ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+.
+
+
+
+# weiping modified 02022023
+s223:Sensor
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:comment "A Sensor observes an ObservableProperty (see `s223:ObservableProperty`) which may be quantifiable (see `s223:QuantifiableObservableProperty`), such as a temperature, flowrate, or concentration, or Enumerable (see `s223:EnumeratedObservableProperty)`, such as an alarm state or occupancy state." ;
+  rdfs:label "Sensor" ;
+  rdfs:subClassOf s223:AbstractSensor ;
+  sh:xone (
+      [
+        sh:property [
+            sh:path s223:hasMeasurementLocation ;
+            rdfs:comment "A Sensor must be associated with exactly 1 of Connectable, Connection, Segment, or ConnectionPoint by hasMeasurementLocation.";
+            sh:class s223:Connectable ;
+          ] ;
+      ]
+      [
+        sh:property [
+            sh:path s223:hasMeasurementLocation ;
+            rdfs:comment "A Sensor must be associated with exactly 1 of Connectable, Connection, Segment, or ConnectionPoint by hasMeasurementLocation.";
+            sh:class s223:Connection ;
+          ] ;
+      ]
+      [
+        sh:property [
+            sh:path s223:hasMeasurementLocation ;
+            rdfs:comment "A Sensor must be associated with exactly 1 of Connectable, Connection, Segment, or ConnectionPoint by hasMeasurementLocation.";
+            sh:class s223:Segment ;
+          ] ;
+      ]
+      [
+        sh:property [
+            sh:path s223:hasMeasurementLocation ;
+            rdfs:comment "A Sensor must be associated with exactly 1 of Connectable, Connection, Segment, or ConnectionPoint by hasMeasurementLocation.";
+            sh:class s223:ConnectionPoint ;
+          ] ;
+      ]
+    ) ;
+  sh:xone (
+      [
+        sh:property [
+            sh:path s223:observes ;
+            rdfs:comment "A Sensor must be associated with exactly 1 of QuantifiableObservableProperty or EnumeratedObservableProperty by observes.";
+            sh:class s223:QuantifiableObservableProperty ;
+          ] ;
+      ]
+      [
+        sh:property [
+            sh:path s223:observes ;
+            rdfs:comment "A Sensor must be associated with exactly 1 of QuantifiableObservableProperty or EnumeratedObservableProperty by observes.";
+            sh:class s223:EnumeratedObservableProperty ;
+          ] ;
+      ]
+    ) ;
+.
+# weiping modified 02022023
+# weiping added
+s223:TerminalUnit
+  a s223:Class;
+  a sh:NodeShape ;
+  rdfs:label "An air terminal that modulates the volume of air delivered to a space." ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+    sh:minCount 2 ;
+    sh:path s223:hasConnectionPoint ;
+  ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A TerminalUnit must provide service using Air.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:InletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Air ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A TerminalUnit must provide service using Air.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:OutletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Air ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+.
+
+s223:Thermostat
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Thermostat" ;
+  rdfs:subClassOf s223:Equipment ;
+.
+# weiping modified 02022023
+s223:SingleDuctTerminal
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "A single duct air terminal that contains a damper." ;
+  rdfs:subClassOf s223:TerminalUnit ;
+  sh:property [
+      sh:path s223:contains ;
+      rdfs:comment "A SingleDuctTerminal must be associated with at least 1 Damper by contains.";
+      sh:qualifiedMinCount 1 ; 
+      sh:minCount 1 ;
+      sh:qualifiedValueShape [
+          sh:class s223:Damper ;
+        ] ;
+    ] ;
+.
+
+
+
+# weiping modified 02022023
+s223:Valve
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Valve" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+    sh:minCount 2 ;
+    sh:path s223:hasConnectionPoint ;
+  ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A Valve must be associated with at least 1 InletConnectionPoint using the relation hasConnectionPoint.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:InletConnectionPoint ;
+        ] ;
+    ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A Valve must be associated with at least 1 OutletConnectionPoint using the relation hasConnectionPoint.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:OutletConnectionPoint ;
+        ] ;
+    ] ;
+.
+
+# weiping modified 02022023
+s223:VFD
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "VFD" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+    sh:minCount 2 ;
+    sh:path s223:hasConnectionPoint ;
+  ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A VFD must provide service using Electricity.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:InletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Electricity ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A VFD must provide service using Electricity.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:OutletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Electricity ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+.
+# weiping modified 02022023
+s223:Window
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Window" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+    sh:minCount 2 ;
+    sh:path s223:hasConnectionPoint ;
+  ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A Window must provide service using Light.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:InletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Light ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+  sh:property [
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "A Window must provide service using Light.";
+      sh:qualifiedMinCount 1 ; 
+      sh:qualifiedValueShape [
+          sh:class s223:OutletConnectionPoint ;
+          sh:node [
+              sh:property [
+                  sh:path s223:hasMedium ;
+                  sh:class s223:Medium-Light ;
+                ] ;
+            ] ;
+        ] ;
+    ] ;
+.
+s223:WindowShade
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "WindowShade" ;
+  rdfs:subClassOf s223:Equipment ;
+.
+<http://data.ashrae.org/standard223/1.0/model/device>
+  a owl:Ontology ;
+  owl:imports <http://data.ashrae.org/standard223/1.0/model/all> ;
+  owl:versionInfo "Created with TopBraid Composer" ;
+  sh:declare [
+      sh:namespace "http://qudt.org/schema/qudt/"^^xsd:anyURI ;
+      sh:prefix "qudt" ;
+    ] ;
+  sh:declare [
+      sh:namespace "http://qudt.org/vocab/quantitykind/"^^xsd:anyURI ;
+      sh:prefix "quantitykind" ;
+    ] ;
+.
+[
+  sh:minCount 1 ;
+].

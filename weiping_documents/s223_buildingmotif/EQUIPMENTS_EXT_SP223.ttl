@@ -1,0 +1,196 @@
+# baseURI: http://data.ashrae.org/standard223/1.0/extension/equipments
+# imports: http://data.ashrae.org/standard223/1.0/model/all
+
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix s223: <http://data.ashrae.org/standard223#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+s223:ConcentrationSensor
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:comment "A ConcentrationSensor is a specialization of a Sensor that observes a QuantifiableObservableProperty that represents the concentration of a substance in a medium." ;
+  rdfs:label "Concentration sensor" ;
+  rdfs:subClassOf s223:Sensor ;
+.
+s223:CoolingCoil
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Cooling coil" ;
+  rdfs:subClassOf s223:Coil ;
+  sh:property [
+      sh:path s223:hasRole ;
+      rdfs:comment "A cooling coil must be related to the role 'HeatExchanger-Cooling' using the relation 'hasRole'." ;
+      sh:hasValue s223:HeatExchanger-Cooling ;
+      sh:minCount 1 ;
+    ] ;
+.
+s223:CorrelatedColorTemperatureSensor
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Correlated color temperature sensor" ;
+  rdfs:subClassOf s223:LightSensor ;
+.
+s223:DuvSensor
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Duv sensor" ;
+  rdfs:subClassOf s223:LightSensor ;
+.
+s223:FlowEquipment
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Flow Equipment" ;
+  rdfs:subClassOf s223:Equipment ;
+  sh:property [
+      a sh:PropertyShape ;
+      sh:path s223:hasConnectionPoint ;
+      rdfs:comment "An instance of Flow Equipment must be associated with any number of ConnectionPoint instances using the relation 'has connection point'." ;
+      sh:class s223:ConnectionPoint ;
+      sh:minCount 2 ;
+      sh:name "Inlet or Outlet point property" ;
+      sh:severity sh:Info ;
+    ] ;
+.
+s223:FlowSensor
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:comment "A FlowSensor is a specialization of a Sensor that produces an ObservableProperty that is quantifiable and represents a flow measurement." ;
+  rdfs:label "Flow sensor" ;
+  rdfs:subClassOf s223:Sensor ;
+.
+s223:HeatingCoil
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Heating coil" ;
+  rdfs:subClassOf s223:Coil ;
+  sh:property [
+      sh:path s223:hasRole ;
+      rdfs:comment "A heating coil must be related to the role 'HeatExchanger-Heating' using the relation 'hasRole'." ;
+      sh:hasValue s223:HeatExchanger-Heating ;
+      sh:minCount 1 ;
+    ] ;
+.
+s223:HumiditySensor
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:comment "A HumiditySensor is a specialization of a Sensor that observes a QuantifiableObservableProperty that represents a humidity measurement. " ;
+  rdfs:label "Humidity sensor" ;
+  rdfs:subClassOf s223:Sensor ;
+.
+s223:IlluminanceSensor
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Illuminance sensor" ;
+  rdfs:subClassOf s223:LightSensor ;
+.
+s223:LightSensor
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:comment "A LightSensor is a specialization of a Sensor that observes a QuantifiableObservableProperty that represents a luminance measurement." ;
+  rdfs:label "Light sensor" ;
+  rdfs:subClassOf s223:Sensor ;
+.
+s223:ManualDamper
+  a s223:Class ;
+  rdfs:label "Manual damper" ;
+  rdfs:subClassOf s223:Damper ;
+.
+s223:ManualValve
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Manual Valve" ;
+  rdfs:subClassOf s223:Valve ;
+.
+s223:MotorizedDamper
+  a s223:Class ;
+  rdfs:label "Motorized damper" ;
+  rdfs:subClassOf s223:Damper ;
+.
+s223:MotorizedThreeWayValve
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Motorized three way valve" ;
+  rdfs:subClassOf s223:MotorizedValve ;
+.
+s223:MotorizedTwoWayValve
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Motorized two way valve" ;
+  rdfs:subClassOf s223:MotorizedValve ;
+.
+s223:MotorizedValve
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Motorized Valve" ;
+  rdfs:subClassOf s223:Valve ;
+.
+s223:OccupancySensor
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:comment "An OccuppancySensor is a specialization of a Sensor that observes a Property that represents measurement of occupancy in a space." ;
+  rdfs:label "Occupancy sensor" ;
+  rdfs:subClassOf s223:Sensor ;
+.
+s223:OccupantCounter
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Occupant counter" ;
+  rdfs:subClassOf s223:OccupancySensor ;
+.
+s223:OccupantMotionSensor
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Occupant motion sensor" ;
+  rdfs:subClassOf s223:OccupancySensor ;
+.
+s223:OccupantPresenceSensor
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Occupant presence sensor" ;
+  rdfs:subClassOf s223:OccupancySensor ;
+.
+s223:ParticulateSensor
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:comment "A ParticulateSensor is a specialization of a Sensor that observes a QuantifiableObservableProperty that represents a particulate concentration measurement." ;
+  rdfs:label "Particulate sensor" ;
+  rdfs:subClassOf s223:Sensor ;
+  sh:property [
+      sh:path s223:measuresSubstance ;
+      rdfs:comment "A ParticulateSensor can be associated with a Substance-Particulate by measuresSubstance" ;
+      sh:class s223:Substance-Particulate ;
+    ] ;
+.
+s223:PressureSensor
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:comment "A PressureSensor is a specialization of a Sensor that observes a QuantifiableObservableProperty that represents a pressure measurement." ;
+  rdfs:label "Pressure sensor" ;
+  rdfs:subClassOf s223:Sensor ;
+.
+s223:TemperatureSensor
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:comment "A TemperatureSensor is a specialization of a Sensor that observes a QuantifiableObservableProperty that represents a temperature measurement." ;
+  rdfs:label "Temp sensor" ;
+  rdfs:subClassOf s223:Sensor ;
+.
+s223:ThreeWayValve
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Three way valve" ;
+  rdfs:subClassOf s223:ManualValve ;
+.
+s223:TwoWayValve
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Two way valve" ;
+  rdfs:subClassOf s223:ManualValve ;
+.
+<http://data.ashrae.org/standard223/1.0/extension/equipments>
+  a owl:Ontology ;
+  owl:imports <http://data.ashrae.org/standard223/1.0/model/all> ;
+.

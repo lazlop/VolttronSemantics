@@ -1,0 +1,304 @@
+
+
+@prefix g36: <http://data.ashrae.org/standard223/1.0/extension/g36#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix s223: <http://data.ashrae.org/standard223#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex: <http://example.org#> .
+@prefix qudt: <http://qudt.org/schema/qudt/> .
+@prefix unit: <http://qudt.org/vocab/unit/> .
+@prefix quantitykind: <http://qudt.org/vocab/quantitykind/> .
+
+<http://data.ashrae.org/standard223/1.0/extension/g36#>
+  a owl:Ontology ;
+  owl:imports <http://data.ashrae.org/standard223/1.0/model/all> ;
+  owl:imports <http://data.ashrae.org/standard223/1.0/collections/MODEL_SP223_all-v1.0.ttl> ;
+  owl:imports <http://data.ashrae.org/standard223/1.0/extensions/G36-rules_SP223-v1.0.shapes.ttl> ;
+.
+
+owl:Class rdfs:subClassOf rdfs:Class .
+
+owl:DatatypeProperty rdfs:subClassOf rdf:Property .
+
+
+ex:VAVReheat 
+    a g36:VAV_4-2, g36:VAVWithReheat;
+    rdfs:label "VAV Terminal Unit with Reheat" ;
+    s223:connectedTo ex:Space1;
+    s223:contains ex:Damper42;
+    s223:hasConnectionPoint ex:VAVInlet42;
+    s223:hasConnectionPoint ex:VAVOutlet42;
+    s223:hasProperty ex:SupplyAirflow42;
+    s223:contains ex:HotWaterCoil;
+.
+
+ex:HotWaterCoil a g36:HotWaterCoil;
+    s223:hasRole s223:HeatExchanger-Heating;
+    s223:hasConnectionPoint ex:HotWaterCoilAirInlet,
+        ex:HotWaterCoilAirOutlet,
+        ex:HotWaterCoilWaterInlet,
+        ex:HotWaterCoilWaterOutlet;
+    s223:connectedTo ex:HotWaterValve;
+    s223:contains ex:HotWaterValve;
+
+    
+.
+
+s223:HeatExchanger-Heating a s223:Role-HeatExchanger, s223:EnumerationKind-Role;
+.
+
+ex:HotWaterCoilAirInlet a s223:InletConnectionPoint;
+    s223:hasMedium s223:Medium-Air;
+    s223:connectsThrough ex:AirAfterDamperBeforeHeatingCoil;
+.
+ex:HotWaterCoilAirOutlet a s223:OutletConnectionPoint;
+    s223:hasMedium s223:Medium-Air;
+    s223:connectsThrough ex:DischargeAir42;
+    s223:mapsTo ex:VAVOutlet42;
+.
+
+ex:HotWaterCoilWaterInlet a s223:InletConnectionPoint ;
+    s223:hasMedium s223:Medium-Water;
+    s223:connectsThrough ex:HotWaterReturnAfterValve;
+.
+
+
+
+ex:HotWaterCoilWaterOutlet a s223:OutletConnectionPoint;
+    s223:hasMedium s223:Medium-Water;
+    s223:connectsThrough ex:HotWaterSupply;
+.
+
+
+
+ex:HotWaterValve a g36:HotWaterValve, s223:Valve;
+    s223:hasProperty ex:HotWaterValveSignal;
+    s223:hasConnectionPoint ex:HotWaterValveInlet,
+        ex:HotWaterValveOutlet;
+
+.
+
+ex:HotWaterValveInlet a s223:InletConnectionPoint;
+    s223:hasMedium s223:Medium-Water;
+    s223:connectsThrough ex:HotWaterReturnBeforeValve;
+.
+ex:HotWaterValveOutlet a s223:OutletConnectionPoint;
+    s223:hasMedium s223:Medium-Water;
+    s223:connectsThrough ex:HotWaterReturnAfterValve;
+.
+
+
+ex:TemperatureSensor a g36:TemperatureSensor;
+    s223:hasMeasurementLocation ex:VAVReheat;
+    s223:observes ex:VAVSupplyAirTemp;
+
+.
+
+
+ex:VAVOutlet42 a s223:OutletConnectionPoint;
+    rdfs:label "VAV Outlet" ;
+    s223:hasMedium s223:Medium-Air ;
+    s223:connectsThrough ex:DischargeAir42;
+    s223:hasProperty ex:VAVSupplyAirTemp;
+.
+
+ex:VAVInlet42 a s223:InletConnectionPoint;
+    rdfs:label "VAV Inlet" ;
+    s223:hasMedium s223:Medium-Air ;
+    s223:connectsThrough ex:SupplyAir42;
+
+.
+
+
+
+ex:SupplyAirflow42 a g36:AnalogIn;
+    rdfs:label "Supply Airflow Property" ;
+    qudt:hasQuantityKind quantitykind:VolumeFlowRate ;
+    qudt:unit unit:L-PER-SEC;
+    rdf:type s223:QuantifiableObservableProperty;
+.
+
+ex:AirFlowStation42 a g36:AirFlowStation;
+    rdfs:label "Supply Airflow Sensor" ;
+    s223:observes ex:SupplyAirflow42;
+    s223:hasMeasurementLocation ex:DamperInlet42;
+    s223:measuresSubstance s223:Medium-Air ;
+    #rdf:type g36:AirFlowStation;
+    
+.
+
+
+
+
+
+
+ex:Space1 a s223:DomainSpace;
+    rdfs:label "The Space 1" ;
+    s223:hasDomain s223:Domain-HVAC ;
+    s223:connectedTo ex:Window ;  
+    
+
+.
+
+ex:Window a s223:Window ;
+    rdfs:label "Window" ;
+    s223:hasConnectionPoint ex:WindowInlet;
+    s223:hasConnectionPoint ex:WindowOutlet;
+.
+
+ex:WindowOutlet a s223:OutletConnectionPoint;
+    rdfs:label "Window Outlet" ;
+    s223:hasMedium ex:Medium-Light ;
+    s223:connectsThrough ex:OutdoorLight;
+
+.
+
+ex:WindowInlet a s223:InletConnectionPoint;
+    rdfs:label "Window Inlet" ;
+    s223:hasMedium ex:Medium-Light ;
+    s223:connectsThrough ex:IndoorLight;
+
+.
+
+
+ex:Medium-Light a s223:Medium-Light, s223:EnumerationKind-Medium;
+.
+
+ex:OutdoorLight a s223:Connection ;
+    rdfs:label "Outdoor Light" ;
+    s223:hasMedium ex:Medium-Light ;
+
+    
+.
+
+
+ex:IndoorLight a s223:Connection ;
+    rdfs:label "Indoor Light" ;
+    s223:hasMedium ex:Medium-Light ;
+.
+
+
+ex:Damper42 a g36:Damper42;
+    rdfs:label "Damper 42" ;
+    s223:hasConnectionPoint ex:DamperInlet42;
+    s223:hasConnectionPoint ex:DamperOutlet42;
+    s223:hasProperty ex:DamperPositionCommand42;
+    s223:connectedTo ex:HotWaterCoil;
+.
+
+ex:DamperPositionCommand42 a g36:AnalogOut;
+    rdfs:label "Damper Position Command Property 42" ;
+    qudt:hasQuantityKind s223:QuantityKind-RelativePosition ;
+    qudt:unit unit:PERCENT ;
+    rdf:type s223:QuantifiableActuatableProperty;
+.
+
+ex:DamperOutlet42 a s223:OutletConnectionPoint;
+    rdfs:label "Damper Outlet 42" ;
+    s223:hasMedium s223:Medium-Air ;
+    s223:connectsThrough ex:AirAfterDamperBeforeHeatingCoil;
+.
+
+ex:DamperInlet42 a s223:InletConnectionPoint;
+    rdfs:label "Damper Inlet 42" ;
+    s223:hasMedium s223:Medium-Air ;
+    s223:connectsThrough ex:SupplyAir42;
+    s223:mapsTo ex:VAVInlet42;
+
+.
+
+ex:SupplyAir42 a s223:Connection ;
+    rdfs:label "Supply Air 42" ;
+    s223:hasMedium s223:Medium-Air ;
+
+    
+.
+
+ex:AirAfterDamperBeforeHeatingCoil a s223:Connection ;
+    rdfs:label "Air After Damper Before Heating Coil" ;
+    s223:hasMedium s223:Medium-Air ;
+
+    
+.
+
+
+ex:DischargeAir42 a s223:Connection ;
+    rdfs:label "Discharge Air 42" ;
+    s223:hasMedium s223:Medium-Air ;
+    
+.
+
+
+ex:HotWaterSupply a s223:Connection ;
+    rdfs:label "Hot Water Supply" ;
+    s223:hasMedium s223:Medium-Water; 
+.
+ex:HotWaterReturnBeforeValve a s223:Connection ;
+    rdfs:label "Hot Water Return Before Valve" ;
+    s223:hasMedium s223:Medium-Water; 
+.
+
+
+ex:HotWaterReturnAfterValve a s223:Connection ;
+    rdfs:label "Hot Water Return After Valve" ;
+    s223:hasMedium s223:Medium-Water; 
+.
+
+ex:WindowSwitch a s223:Sensor;
+    rdfs:label "Window Switch Sensor" ;
+    s223:hasMeasurementLocation ex:Window;
+    s223:observes ex:WindowSwitchOnOff;
+.
+
+
+ex:Zone a g36:Zone;
+    rdfs:label "The Zone" ;
+    s223:contains ex:Space1;
+    s223:hasDomain s223:Domain-HVAC ;
+    s223:hasProperty ex:ZoneTemp;
+    s223:hasProperty ex:ZoneCO2;
+    s223:hasProperty ex:ZoneOccupancy;
+    s223:hasProperty ex:WindowSwitchOnOff;
+.
+
+ex:ZoneTemp a g36:AnalogIn;
+    rdfs:label "Zone Temperature Property" ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    rdf:type s223:QuantifiableObservableProperty;
+    qudt:unit unit:DEG_C;
+.
+
+ex:VAVSupplyAirTemp a g36:AnalogIn;
+    rdfs:label "VAV Supply Air Temperature Property" ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    rdf:type s223:QuantifiableObservableProperty;
+    qudt:unit unit:DEG_C;
+.
+
+
+ex:ZoneCO2 a g36:AnalogIn;
+    rdfs:label "Zone CO2 Property" ;
+    qudt:hasQuantityKind quantitykind:Concentration;
+    s223:ofSubstance s223:Substance-CO2 ;
+    rdf:type s223:QuantifiableObservableProperty;
+    qudt:unit unit:PPM;
+.
+
+ex:ZoneOccupancy a g36:BinaryIn;
+    rdfs:label "Zone Occupancy Property" ;
+    s223:hasEnumerationKind g36:RunStatus;
+.
+ex:WindowSwitchOnOff a g36:BinaryIn;
+    rdfs:label "Window Switch Property" ;
+    s223:hasEnumerationKind g36:RunStatus;
+.
+
+ex:HotWaterValveSignal a g36:AnalogOut;
+    rdfs:label "Hot Water Valve Signal" ;
+    qudt:hasQuantityKind s223:QuantityKind-RelativePosition ;
+    qudt:unit unit:PERCENT ;
+    rdf:type s223:QuantifiableActuatableProperty;
+.

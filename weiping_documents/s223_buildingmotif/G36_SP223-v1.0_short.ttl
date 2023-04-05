@@ -1,0 +1,601 @@
+# baseURI: http://data.ashrae.org/standard223/1.0/extension/g36
+# imports: http://data.ashrae.org/standard223/1.0/model/all
+# prefix: g36
+
+@prefix g36: <http://data.ashrae.org/standard223/1.0/extension/g36#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix s223: <http://data.ashrae.org/standard223#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix quantitykind: <http://qudt.org/vocab/quantitykind/> .
+@prefix qudt: <http://qudt.org/schema/qudt/> .
+
+<http://data.ashrae.org/standard223/1.0/extension/g36>
+  a owl:Ontology ;
+  owl:imports <http://data.ashrae.org/standard223/1.0/model/all> ;
+  owl:versionInfo "Created with TopBraid Composer" ;
+.
+
+
+g36:VAV_4-2
+  a sh:NodeShape ;
+  a s223:Class ;
+  sh:class g36:VAVWithReheat ;
+  rdfs:comment "This could just be a rule, rather than a subclass of VAVWithReheat. Not sure which pattern is more sensible" ;
+  sh:property [
+    sh:severity s223:g36 ;
+    # This severity will be deleted later, just to help parse through validation results
+    sh:path s223:connectedTo ;
+    sh:class s223:DomainSpace ;
+    sh:minCount 1 ;
+    sh:node [
+      sh:property [
+        sh:path [ sh:inversePath s223:contains ] ;
+        sh:class g36:Zone ;
+        sh:minCount 1 ;
+      ] ;
+    ] ;
+  ] ;
+. 
+
+
+
+g36:VAVWithReheat
+  a s223:Class ; 
+  a sh:NodeShape ;
+  rdfs:label "VAV with Reheat" ;
+  rdfs:subClassOf g36:VAV ;
+  sh:property [
+    sh:severity s223:g36 ;
+    sh:path s223:contains ;
+    sh:qualifiedValueShape [ sh:class g36:HotWaterCoil; ] ;
+    sh:qualifiedValueShapesDisjoint true ;
+    sh:qualifiedMinCount 1 ;
+		sh:qualifiedMaxCount 1 ;
+  ] ;
+  sh:property [
+    sh:severity s223:g36;
+    rdfs:comment "Temperature sensor has measurement location at Outlet of hot water coil or VAV" ;
+    rdfs:comment """For now, looking at temperature property because other inference rules may enable this.
+    Is there a rule to attach properties to nodes between equipment? I.e. If a temperature property is placed at the
+    outlet of the HotWaterCoil, that would be inferred to be the same property at the outlet of the VAV? This rule
+    could be applied to systems or equipments where we know it makes sense, if it should not be done generally.""" ;
+    sh:path s223:hasConnectionPoint ;
+    sh:minCount 1 ;
+    sh:qualifiedMinCount 1 ; 
+    sh:qualifiedValueShape [
+      sh:class s223:OutletConnectionPoint ;
+      sh:node [
+          sh:property [
+              sh:path (s223:hasProperty qudt:hasQuantityKind);
+              sh:hasValue quantitykind:Temperature ;
+            ] ;
+        ] ;
+    ] ;
+  ] ;
+  sh:property [
+    sh:path [ sh:inversePath s223:hasMeasurementLocation ] ;
+    sh:qualifiedMinCount 1 ; 
+    sh:qualifiedValueShape [
+      sh:class g36:TemperatureSensor ;
+    ];
+  ];
+
+
+.
+
+
+g36:HotWaterCoil
+  a s223:Class ; 
+  a sh:NodeShape ; 
+  rdfs:label "HotWater/ReheatCoil" ;
+  rdfs:subClassOf s223:HeatingCoil ;
+  sh:class s223:HeatingCoil ;
+  sh:property [
+    sh:severity s223:g36 ;
+    sh:comment "Must have Valve Connected." ;
+    sh:path [ sh:alternativePath ( s223:connectedFrom s223:connectedTo ) ];
+    sh:class g36:HotWaterValve ;
+    sh:minCount 1 ; 
+  ] ;
+  sh:property [
+    sh:severity s223:g36 ;
+    sh:comment "Valve should be contained ? " ;
+    sh:path s223:contains ;
+    sh:class g36:HotWaterValve ;
+    sh:minCount 1 ; 
+  ] ;
+  sh:property [
+    rdfs:comment "The HotWaterCoil outlet connection point must map to exactly one VAV outlet connection point";
+    sh:path s223:hasConnectionPoint ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape [
+      sh:class s223:OutletConnectionPoint ;
+      sh:node [
+        sh:property [
+          sh:path s223:mapsTo ;
+          sh:class s223:OutletConnectionPoint ;
+          sh:minCount 1;
+          sh:maxCount 1;
+          sh:node [
+            sh:property [
+              sh:path [ sh:inversePath s223:hasConnectionPoint ] ;
+              sh:class g36:VAVWithReheat ;
+              sh:minCount 1 ;
+            ] ;
+          ];
+        ] ;
+      ];
+    ];
+  ] ;
+
+.
+
+
+g36:HotWaterValve
+  a s223:Class ; 
+  a sh:NodeShape ; 
+  rdfs:label "Hot Water Valve" ;
+  rdfs:subClassOf s223:Valve ;
+  sh:class s223:Valve ;
+  sh:property [
+    rdfs:comment "HW Valve Signal. Add Aspects to this?" ; # weiping added aspects
+    sh:path s223:hasProperty ;
+    sh:minCount 1;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape [
+      sh:class g36:AnalogOut ;
+      sh:node [
+        sh:property [
+          sh:path qudt:hasQuantityKind ;
+          sh:hasValue s223:QuantityKind-RelativePosition ;
+        ] ;
+      ] ;
+    ] ;
+  ] ;
+.
+
+g36:TemperatureSensor
+  a s223:Class ; 
+  a sh:NodeShape ;
+  rdfs:subClassOf s223:TemperatureSensor ;
+  sh:property [
+    rdfs:comment "Supply air temperature sensor" ;
+    sh:path s223:observes ;
+    sh:qualifiedMinCount 1 ; 
+    sh:qualifiedValueShape [
+      sh:class g36:AnalogIn ;
+      sh:node [
+        sh:property [
+          sh:path qudt:hasQuantityKind ;
+          sh:hasValue quantitykind:Temperature ;
+        ] ;
+      ];
+    ];
+  ];
+.
+
+g36:VAV_4-1
+  a sh:NodeShape ;
+  a s223:Class ;
+  sh:class g36:VAV ;
+  sh:property [
+    sh:path s223:connectedTo ;
+    sh:class s223:DomainSpace ;
+    sh:minCount 1 ;
+    sh:node [
+      sh:property [
+        sh:path [ sh:inversePath s223:contains ] ;
+        sh:class g36:Zone ;
+        sh:minCount 1 ;
+      ] ;
+    ] ;
+  ] ;
+.
+g36:VAV 
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "VAV" ;
+  rdfs:subClassOf s223:SingleDuctTerminal ;
+  sh:node g36:VAVRule ;
+.
+g36:VAVRule
+  a sh:NodeShape ;
+  sh:class s223:SingleDuctTerminal ;
+  sh:property [
+    sh:path s223:contains ;
+    sh:qualifiedValueShape [ sh:class s223:Damper; ] ;
+    sh:qualifiedValueShapesDisjoint true ;
+    sh:qualifiedMinCount 1 ;
+		sh:qualifiedMaxCount 1 ;
+    ];
+  sh:property [
+    sh:path s223:hasProperty ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape [
+      sh:class g36:AnalogIn ;
+      sh:node [
+        sh:property [
+          sh:path qudt:hasQuantityKind ;
+          sh:hasValue quantitykind:VolumeFlowRate ;
+        ] ;
+      ];
+    ];
+  ];
+.
+
+
+g36:Damper42
+  a s223:Class ;
+  a sh:Nodeshape ;
+  rdfs:label "Damper" ;
+  rdfs:subClassOf s223:Damper ;
+  sh:node g36:DamperRule42 ;
+.
+g36:DamperRule42
+  a sh:NodeShape ;
+  sh:class s223:Damper ;
+  sh:property [
+    sh:path s223:hasProperty ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape [
+      sh:class g36:AnalogOut ;
+      sh:node [
+        sh:property [
+          sh:path qudt:hasQuantityKind ;
+          sh:hasValue s223:QuantityKind-RelativePosition ;
+        ] ;
+      ];
+    ];
+  ] ;
+  sh:property [
+    rdfs:comment "The damper inlet connection point must map to exactly one VAV inlet connection point";
+    sh:path s223:hasConnectionPoint ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape [
+      sh:class s223:InletConnectionPoint ;
+      sh:node [
+        sh:property [
+          sh:path s223:mapsTo ;
+          sh:class s223:InletConnectionPoint ;
+          sh:minCount 1;
+          sh:maxCount 1;
+          sh:node [
+            sh:property [
+              sh:path [ sh:inversePath s223:hasConnectionPoint ] ;
+              sh:class g36:VAVWithReheat ;
+              sh:minCount 1 ;
+            ] ;
+          ];
+        ] ;
+      ];
+    ];
+  ] ;
+
+  sh:property [
+    rdfs:comment "The damper  must connectedTo at least one piece of equipment that is a Hot Water Coil.";
+    sh:path s223:connectedTo ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape [
+      sh:class g36:HotWaterCoil ;
+    ];
+  ] ;
+.
+
+
+
+
+
+
+g36:Damper
+  a s223:Class ;
+  a sh:Nodeshape ;
+  rdfs:label "Damper" ;
+  rdfs:subClassOf s223:Damper ;
+  sh:node g36:DamperRule ;
+.
+g36:DamperRule
+  a sh:NodeShape ;
+  sh:class s223:Damper ;
+  sh:property [
+    sh:path s223:hasProperty ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape [
+      sh:class g36:AnalogOut ;
+      sh:node [
+        sh:property [
+          sh:path qudt:hasQuantityKind ;
+          sh:hasValue s223:QuantityKind-RelativePosition ;
+        ] ;
+      ];
+    ];
+  ] ;
+  sh:property [
+    rdfs:comment "The damper inlet connection point must map to exactly one VAV inlet connection point";
+    sh:path s223:hasConnectionPoint ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape [
+      sh:class s223:InletConnectionPoint ;
+      sh:node [
+        sh:property [
+          sh:path s223:mapsTo ;
+          sh:class s223:InletConnectionPoint ;
+          sh:minCount 1;
+          sh:maxCount 1;
+          sh:node [
+            sh:property [
+              sh:path [ sh:inversePath s223:hasConnectionPoint ] ;
+              sh:class g36:VAV ;
+              sh:minCount 1 ;
+            ] ;
+          ];
+        ] ;
+      ];
+    ];
+  ] ;
+
+  sh:property [
+    rdfs:comment "The damper outlet connection point must map to exactly one VAV outlet connection point";
+    sh:path s223:hasConnectionPoint ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape [
+      sh:class s223:OutletConnectionPoint ;
+      sh:node [
+        sh:property [
+          sh:path s223:mapsTo ;
+          sh:class s223:OutletConnectionPoint ;
+          sh:minCount 1;
+          sh:maxCount 1;
+          sh:node [
+            sh:property [
+              sh:path [ sh:inversePath s223:hasConnectionPoint ] ;
+              sh:class g36:VAV ;
+              sh:minCount 1 ;
+            ] ;
+          ];
+        ] ;
+      ];
+    ];
+  ] ;
+.
+g36:EnumerationKind-Position 
+  rdfs:comment "Would like to move this to vocab with other property enumeration kinds" ;
+  a s223:Class ;
+  a g36:EnumerationKind-Position ;
+  a sh:NodeShape ;
+  rdfs:label "For properties related to position" ;
+  rdfs:subClassOf s223:EnumerationKind ;
+.
+g36:Zone
+  a s223:Class ;
+  a sh:Nodeshape ;
+  rdfs:label "Zone with relevant points" ;
+  rdfs:subClassOf s223:Zone ;
+  sh:node g36:ZoneRule ;
+.
+g36:ZoneRule
+  a sh:NodeShape ;
+  sh:class s223:Zone ;
+  sh:property [
+    sh:path s223:hasDomain ;
+    sh:hasValue s223:Domain-HVAC ;
+    sh:minCount 1 ;
+  ] ;
+  sh:property [
+    sh:path s223:hasProperty ;
+    rdfs:comment "Zone Temp" ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape [
+      sh:class g36:AnalogIn ;
+      sh:node [
+        sh:property [
+          sh:path qudt:hasQuantityKind ;
+          sh:hasValue quantitykind:Temperature ;
+        ] ;
+      ] ;
+    ] ;
+  ] ;
+  sh:property [
+    rdfs:comment "Zone CO2" ;
+    sh:path s223:hasProperty ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape [
+      sh:class g36:AnalogIn ;
+      sh:node [
+        sh:property [
+          sh:path qudt:hasQuantityKind ;
+          sh:hasValue quantitykind:Concentration ;
+        ] ;
+        sh:property [
+          sh:path s223:ofSubstance ;
+          sh:hasValue s223:Substance-CO2 ;
+        ] ;
+      ] ;
+    ] ;
+  ] ;
+  sh:property [
+    rdfs:comment "Zone Occupancy" ;
+    sh:qualifiedMinCount 1 ;
+    sh:path s223:hasProperty ;
+    sh:qualifiedValueShape [
+      sh:class g36:BinaryIn ;
+    ] ;
+  ] ;
+  sh:property [
+    rdfs:comment "Window Switch Property" ;
+    sh:qualifiedMinCount 1 ;
+    sh:path s223:hasProperty ;
+    sh:qualifiedValueShape [
+      sh:class g36:BinaryIn ;
+    ] ;
+  ] ;
+  sh:property [
+    rdfs:comment "Window Switch (Should there be an Open/Close Enumeratable property?) " ;
+    sh:qualifiedMinCount 1 ;
+    sh:path s223:contains ;
+    sh:qualifiedValueShape [
+      sh:class s223:DomainSpace ;
+      sh:node [
+        sh:property [
+          sh:path s223:connectedTo ;
+          sh:class s223:Window ;
+          sh:node [
+            sh:property [
+              sh:path [sh:inversePath s223:hasMeasurementLocation] ;
+              sh:class s223:Sensor
+            ] ;
+          ];
+        ] ;
+      ] ;
+    ] ;
+  ] ;
+.
+
+g36:AirFlowStation
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Air Flow Station" ;
+  rdfs:subClassOf s223:Sensor ;
+  sh:node g36:AirFlowStationRule ;
+.
+g36:AirFlowStationAnnotation
+  a sh:NodeShape ;
+  sh:targetClass s223:Sensor ;
+  sh:rule [
+    a sh:TripleRule ;
+    sh:condition g36:AirFlowStationRule ;
+    sh:subject sh:this ;
+    sh:predicate rdf:type ;
+    sh:object g36:AirFlowStation ;
+  ] ;
+.
+g36:AirFlowStationRule 
+  a sh:NodeShape ;
+  sh:class s223:Sensor ;
+  sh:property [
+    sh:path s223:observes ;
+    sh:class s223:QuantifiableObservableProperty ;
+    sh:minCount 1 ;
+  ] ;
+  sh:property [
+    sh:path s223:measuresSubstance ;
+    sh:class s223:Medium-Air ;
+    sh:minCount 1 ;
+  ] ;
+  sh:property [
+    rdfs:comment "The Air Flow Station must hasMeasurementLocation the Damper InletConnectionPoint.";
+    sh:path s223:hasMeasurementLocation ;
+    sh:class s223:InletConnectionPoint ;
+    sh:minCount 1;
+    sh:maxCount 1;
+    sh:node [
+      sh:property [
+        sh:path [ sh:inversePath s223:hasConnectionPoint ] ;
+        sh:class s223:Damper ;
+        sh:minCount 1 ;
+      ] ;
+    ];
+  ] ;
+
+.
+
+g36:AnalogIn
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Analog in" ;
+  rdfs:subClassOf s223:QuantifiableObservableProperty ;
+  sh:rule [
+      a sh:TripleRule ;
+      rdfs:comment "Getting validation reports about AnalogIn not being Property or ObservableProperty. Should probably move this rule up." ;
+      rdfs:comment "An AnalogIn is a QuantifiableObervableProperty." ;
+      sh:object s223:QuantifiableObservableProperty ;
+      sh:predicate rdf:type ;
+      sh:subject sh:this ;
+    ] ;
+.
+g36:AnalogOut
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Analog out" ;
+  rdfs:subClassOf s223:QuantifiableActuatableProperty ;
+  sh:rule [
+      a sh:TripleRule ;
+      rdfs:comment "An AnalogOut is a QuantifiableActuatableProperty." ;
+      sh:object s223:QuantifiableActuatableProperty ;
+      sh:predicate rdf:type ;
+      sh:subject sh:this ;
+    ] ;
+.
+g36:BinaryIn
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Binary in" ;
+  rdfs:subClassOf s223:EnumeratedObservableProperty ;
+    sh:rule [
+      a sh:TripleRule ;
+      rdfs:comment "An instance of g36:BinaryIn has a value that is a member of the EnumerationKind g36:RunStatus." ;
+      sh:object g36:RunStatus ;
+      sh:predicate s223:hasEnumerationKind ;
+      sh:subject sh:this ;
+    ] ;
+.
+g36:BinaryOut
+  a s223:Class ;
+  a sh:NodeShape ;
+  rdfs:label "Binary out" ;
+  rdfs:subClassOf s223:EnumeratedActuatableProperty ;
+  sh:rule [
+      a sh:TripleRule ;
+      rdfs:comment "An instance of g36:BinaryOut has a value that is a member of the EnumerationKind g36:RunCommand." ;
+      sh:object g36:RunCommand ;
+      sh:predicate s223:hasEnumerationKind ;
+      sh:subject sh:this ;
+    ] ;
+.
+g36:RunStatus
+  a s223:Class ;
+  a g36:RunStatus ;
+  a sh:NodeShape ;
+  rdfs:label "Run status" ;
+  rdfs:subClassOf s223:EnumerationKind ;
+.
+g36:RunCommand
+  a s223:Class ;
+  a g36:RunCommand ;
+  a sh:NodeShape ;
+  rdfs:label "Run command" ;
+  rdfs:subClassOf s223:EnumerationKind ;
+.
+g36:RunStatus-On
+  a g36:RunStatus ;
+  rdfs:label "On" ;
+.
+g36:RunStatus-Off
+  a g36:RunStatus ;
+  rdfs:label "Off" ;
+.
+g36:RunStatus-Unknown
+  a g36:RunStatus ;
+  rdfs:label "Unknown" ;
+.
+g36:RunCommand-Start
+  a g36:RunCommand ;
+  rdfs:label "Start" ;
+.
+g36:RunCommand-Stop
+  a g36:RunCommand ;
+  rdfs:label "Stop" ;
+.
+
+s223:QuantityKind-RelativePosition
+  a s223:Class ;
+  a s223:QuantityKind-RelativePosition ;
+  a qudt:QuantityKind ;
+.
+s223:QuantityKind-Occupancy
+  a s223:Class ;
+  a s223:QuantityKind-Occupancy ;
+  a qudt:QuantityKind ;
+.
