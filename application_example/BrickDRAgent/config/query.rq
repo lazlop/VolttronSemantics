@@ -1,0 +1,56 @@
+prefix ref: <https://brickschema.org/schema/Brick/ref#>
+PREFIX brick: <https://brickschema.org/schema/Brick#>
+PREFIX g36: <http://data.ashrae.org/standard223/1.0/extension/g36#>
+PREFIX unit: <http://qudt.org/vocab/unit/>
+PREFIX quantitykind: <http://qudt.org/vocab/quantitykind/>
+PREFIX qudt: <http://qudt.org/schema/qudt/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+prefix bacnet: <http://data.ashrae.org/bacnet/2020#> 
+prefix ex: <http://example.org#> 
+PREFIX s223: <http://data.ashrae.org/standard223#>
+PREFIX sh: <http://www.w3.org/ns/shacl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX vltt: <https://www.doesntexist.org/volttronsemantics#> 
+
+SELECT ?equip (MAX(?TZonPoint) as ?TZonPoint) (MAX(?TSetMinPoint) as ?TSetMinPoint) (MAX(?TSetMaxPoint) as ?TSetMaxPoint) (COALESCE(MAX(?TSetHeaZonPoint), "N/A") as ?TSetHeaZonPoint) (COALESCE(MAX(?TSetCooZonPoint), "N/A") as ?TSetCooZonPoint) (COALESCE(MAX(?TSetZonPoint), "N/A") as ?TSetZonPoint)
+WHERE {
+    ?zone a brick:HVAC_Zone .
+    ?equip brick:feeds ?zone ;
+        a brick:FCU ;
+        brick:hasPoint ?TZon, ?TSetZon .
+    ?TZon a brick:Air_Temperature_Sensor ;
+    ref:hasExternalReference/vltt:hasTopicName ?TZonPoint  .
+    ?TSetZon a brick:Air_Temperature_Setpoint ;
+    ref:hasExternalReference/vltt:hasTopicName ?TSetZonPoint  .
+}
+    GROUP BY ?equip
+    
+# SELECT ?zone (MAX(?TZonPoint) as ?TZonPoint) (MAX(?TSetMinPoint) as ?TSetMinPoint) (MAX(?TSetMaxPoint) as ?TSetMaxPoint) (COALESCE(MAX(?TSetHeaZonPoint), "N/A") as ?TSetHeaZonPoint) (COALESCE(MAX(?TSetCooZonPoint), "N/A") as ?TSetCooZonPoint) (COALESCE(MAX(?TSetZonPoint), "N/A") as ?TSetZonPoint)
+# WHERE {
+#     ?zone a brick:Zone ;
+#     brick:hasPoint ?TZon, ?TSetMin, ?TSetMax, ?TSetHeaZon, ?TSetCooZon, ?TSetZon .
+    
+#     ?TZon a brick:Zone_Air_Temperature_Sensor ;
+#         ref:hasExternalReference/ref:hasTimeseriesId ?TZonPoint .
+
+#     ?TSetMin a brick:Min_Air_Temperature_Setpoint ;
+#         ref:hasExternalReference/ref:hasTimeseriesId ?TSetMinPoint .
+
+#     ?TSetMax a brick:Max_Air_Temperature_Setpoint ;
+#         ref:hasExternalReference/ref:hasTimeseriesId ?TSetMaxPoint .
+
+#     OPTIONAL {
+#     ?TSetHeaZon a brick:Zone_Air_Heating_Temperature_Setpoint;
+#         ref:hasExternalReference/ref:hasTimeseriesId ?TSetHeaZonPoint .}
+
+#     OPTIONAL {
+#     ?TSetCooZon a brick:Zone_Air_Cooling_Temperature_Setpoint;
+#         ref:hasExternalReference/ref:hasTimeseriesId ?TSetCooZonPoint .}
+
+#     OPTIONAL {
+#     ?TSetZon a brick:Zone_Air_Temperature_Setpoint;
+#         ref:hasExternalReference/ref:hasTimeseriesId ?TSetZonPoint .}
+
+# }
+#     GROUP BY ?zone

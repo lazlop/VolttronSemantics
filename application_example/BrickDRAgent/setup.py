@@ -16,7 +16,7 @@ setup(
     name=agent_package,
     version=__version__,
     author="Lazlo Paul",
-    author_email="lpaul@lbl.gov",
+    author_email="",
     description="Agent that runs dr based on a brick model",
     install_requires=['volttron'],
     packages=packages,

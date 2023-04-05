@@ -1,0 +1,163 @@
+@prefix bacnet: <http://data.ashrae.org/bacnet/2020#> .
+@prefix brick: <https://brickschema.org/schema/Brick#> .
+@prefix ns2: <https://brickschema.org/schema/ref#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix ref: <https://brickschema.org/schema/Brick/ref#> .
+@prefix vltt: <https://www.doesntexist.org/volttronsemantics#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<urn:bldg/> a owl:Ontology .
+
+<urn:bldg/ahu_reaFloSupAir_y_bacnet> ref:hasExternalReference <urn:bldg/hvacZone.ahu_reaFloSupAir_y_bacnet> .
+
+<urn:bldg/ahu_reaPFanRet_y_bacnet> ref:hasExternalReference <urn:bldg/hvacZone.ahu_reaPFanRet_y_bacnet> .
+
+<urn:bldg/ahu_reaPFanSup_y_bacnet> ref:hasExternalReference <urn:bldg/hvacZone.ahu_reaPFanSup_y_bacnet> .
+
+<urn:bldg/ahu_reaTRetAir_y_bacnet> ref:hasExternalReference <urn:bldg/hvacZone.ahu_reaTRetAir_y_bacnet> .
+
+<urn:bldg/building> a brick:Building .
+
+<urn:bldg/hvacZone> a brick:Zone ;
+    brick:hasPoint <urn:bldg/hvacZone.ahu_reaFloSupAir_y_bacnet>,
+        <urn:bldg/hvacZone.ahu_reaPFanRet_y_bacnet>,
+        <urn:bldg/hvacZone.ahu_reaPFanSup_y_bacnet>,
+        <urn:bldg/hvacZone.ahu_reaTRetAir_y_bacnet>,
+        <urn:bldg/hvacZone.oveTZonSet_u_bacnet>,
+        <urn:bldg/hvacZone.reaCO2Zon_y_bacnet>,
+        <urn:bldg/hvacZone.reaPEle_y_bacnet>,
+        <urn:bldg/hvacZone.reaPPum_y_bacnet>,
+        <urn:bldg/hvacZone.reaQHea_y_bacnet>,
+        <urn:bldg/hvacZone.reaTZon_y_bacnet> ;
+    ref:hasExternalReference <urn:bldg/hvacZone.config>,
+        <urn:bldg/hvacZone.point_list> .
+
+<urn:bldg/hvacZone.ahu_reaFloSupAir_y_bacnet.topic> a vltt:VolttronTopic ;
+    vltt:hasTopicName "BOPTest/singlezone_commercial_hvac/ahu_reaFloSupAir_y_bacnet" .
+
+<urn:bldg/hvacZone.ahu_reaPFanRet_y_bacnet.topic> a vltt:VolttronTopic ;
+    vltt:hasTopicName "BOPTest/singlezone_commercial_hvac/ahu_reaPFanRet_y_bacnet" .
+
+<urn:bldg/hvacZone.ahu_reaPFanSup_y_bacnet.topic> a vltt:VolttronTopic ;
+    vltt:hasTopicName "BOPTest/singlezone_commercial_hvac/ahu_reaPFanSup_y_bacnet" .
+
+<urn:bldg/hvacZone.ahu_reaTRetAir_y_bacnet.topic> a vltt:VolttronTopic ;
+    vltt:hasTopicName "BOPTest/singlezone_commercial_hvac/ahu_reaTRetAir_y_bacnet" .
+
+<urn:bldg/hvacZone.oveTZonSet_u_bacnet.topic> a vltt:VolttronTopic ;
+    vltt:hasTopicName "BOPTest/singlezone_commercial_hvac/oveTZonSet_u_bacnet" .
+
+<urn:bldg/hvacZone.reaCO2Zon_y_bacnet.topic> a vltt:VolttronTopic ;
+    vltt:hasTopicName "BOPTest/singlezone_commercial_hvac/reaCO2Zon_y_bacnet" .
+
+<urn:bldg/hvacZone.reaPEle_y_bacnet.topic> a vltt:VolttronTopic ;
+    vltt:hasTopicName "BOPTest/singlezone_commercial_hvac/reaPEle_y_bacnet" .
+
+<urn:bldg/hvacZone.reaPPum_y_bacnet.topic> a vltt:VolttronTopic ;
+    vltt:hasTopicName "BOPTest/singlezone_commercial_hvac/reaPPum_y_bacnet" .
+
+<urn:bldg/hvacZone.reaQHea_y_bacnet.topic> a vltt:VolttronTopic ;
+    vltt:hasTopicName "BOPTest/singlezone_commercial_hvac/reaQHea_y_bacnet" .
+
+<urn:bldg/hvacZone.reaTZon_y_bacnet.topic> a vltt:VolttronTopic ;
+    vltt:hasTopicName "BOPTest/singlezone_commercial_hvac/reaTZon_y_bacnet" .
+
+<urn:bldg/oveTZonSet_u_bacnet> ref:hasExternalReference <urn:bldg/hvacZone.oveTZonSet_u_bacnet> .
+
+<urn:bldg/reaCO2Zon_y_bacnet> ref:hasExternalReference <urn:bldg/hvacZone.reaCO2Zon_y_bacnet> .
+
+<urn:bldg/reaPEle_y_bacnet> ref:hasExternalReference <urn:bldg/hvacZone.reaPEle_y_bacnet> .
+
+<urn:bldg/reaPPum_y_bacnet> ref:hasExternalReference <urn:bldg/hvacZone.reaPPum_y_bacnet> .
+
+<urn:bldg/reaQHea_y_bacnet> ref:hasExternalReference <urn:bldg/hvacZone.reaQHea_y_bacnet> .
+
+<urn:bldg/reaTZon_y_bacnet> ref:hasExternalReference <urn:bldg/hvacZone.reaTZon_y_bacnet> .
+
+<urn:bldg/space> a brick:Space .
+
+<urn:bldg/hvacZone.config> a vltt:VolttronDeviceConfig ;
+    vltt:hasPath "examples/BACnet/bacnet.config" .
+
+<urn:bldg/hvacZone.point_list> a vltt:VolttronPointList ;
+    vltt:hasPath "point_list.csv" .
+
+<urn:bldg/hvacZone.ahu_reaFloSupAir_y_bacnet> a brick:Point,
+        brick:Supply_Air_Flow_Sensor ;
+    ns2:hasExternalReference [ a ns2:BACnetReference ;
+            bacnet:object-identifier "analog-value" ;
+            bacnet:object-name "ahu_reaFloSupAir_y" ;
+            bacnet:objectOf <urn:bldg/hvacZone.bacnet.device> ] .
+
+<urn:bldg/hvacZone.ahu_reaPFanRet_y_bacnet> a brick:Electric_Power_Sensor,
+        brick:Point ;
+    ns2:hasExternalReference [ a ns2:BACnetReference ;
+            bacnet:object-identifier "analog-value" ;
+            bacnet:object-name "ahu_reaPFanRet_y" ;
+            bacnet:objectOf <urn:bldg/hvacZone.bacnet.device> ] .
+
+<urn:bldg/hvacZone.ahu_reaPFanSup_y_bacnet> a brick:Electric_Power_Sensor,
+        brick:Point ;
+    ns2:hasExternalReference [ a ns2:BACnetReference ;
+            bacnet:object-identifier "analog-value" ;
+            bacnet:object-name "ahu_reaPFanSup_y" ;
+            bacnet:objectOf <urn:bldg/hvacZone.bacnet.device> ] .
+
+<urn:bldg/hvacZone.ahu_reaTRetAir_y_bacnet> a brick:Point,
+        brick:Return_Air_Temperature_Sensor ;
+    ns2:hasExternalReference [ a ns2:BACnetReference ;
+            bacnet:object-identifier "analog-value" ;
+            bacnet:object-name "ahu_reaTRetAir_y" ;
+            bacnet:objectOf <urn:bldg/hvacZone.bacnet.device> ] .
+
+<urn:bldg/hvacZone.oveTZonSet_u_bacnet> a brick:Point,
+        brick:Zone_Air_Heating_Temperature_Setpoint,
+        brick:Zone_Air_Temperature_Setpoint ;
+    ns2:hasExternalReference [ a ns2:BACnetReference ;
+            bacnet:object-identifier "analog-value" ;
+            bacnet:object-name "oveTZonSet_u" ;
+            bacnet:objectOf <urn:bldg/hvacZone.bacnet.device> ],
+        [ a ns2:BACnetReference ;
+            bacnet:object-identifier "analog-value" ;
+            bacnet:object-name "oveTZonSet_u" ;
+            bacnet:objectOf <urn:bldg/hvacZone.bacnet.device> ] .
+
+<urn:bldg/hvacZone.reaCO2Zon_y_bacnet> a brick:CO2_Level_Sensor,
+        brick:Point ;
+    ns2:hasExternalReference [ a ns2:BACnetReference ;
+            bacnet:object-identifier "analog-value" ;
+            bacnet:object-name "reaCO2Zon_y" ;
+            bacnet:objectOf <urn:bldg/hvacZone.bacnet.device> ] .
+
+<urn:bldg/hvacZone.reaPEle_y_bacnet> a brick:Electric_Power_Sensor,
+        brick:Point ;
+    ns2:hasExternalReference [ a ns2:BACnetReference ;
+            bacnet:object-identifier "analog-value" ;
+            bacnet:object-name "reaPEle_y" ;
+            bacnet:objectOf <urn:bldg/hvacZone.bacnet.device> ] .
+
+<urn:bldg/hvacZone.reaPPum_y_bacnet> a brick:Electric_Power_Sensor,
+        brick:Point ;
+    ns2:hasExternalReference [ a ns2:BACnetReference ;
+            bacnet:object-identifier "analog-value" ;
+            bacnet:object-name "reaPPum_y" ;
+            bacnet:objectOf <urn:bldg/hvacZone.bacnet.device> ] .
+
+<urn:bldg/hvacZone.reaQHea_y_bacnet> a brick:Point,
+        brick:Thermal_Power_Sensor ;
+    ns2:hasExternalReference [ a ns2:BACnetReference ;
+            bacnet:object-identifier "analog-value" ;
+            bacnet:object-name "reaQHea_y" ;
+            bacnet:objectOf <urn:bldg/hvacZone.bacnet.device> ] .
+
+<urn:bldg/hvacZone.reaTZon_y_bacnet> a brick:Point,
+        brick:Zone_Air_Temperature_Sensor ;
+    ns2:hasExternalReference [ a ns2:BACnetReference ;
+            bacnet:object-identifier "analog-value" ;
+            bacnet:object-name "reaTZon_y" ;
+            bacnet:objectOf <urn:bldg/hvacZone.bacnet.device> ] .
+
+<urn:bldg/hvacZone.bacnet.device> a bacnet:BACnetDevice ;
+    bacnet:device-instance 599 ;
+    bacnet:hasAddress "10.0.2.7/24" .
+

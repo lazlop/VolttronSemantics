@@ -1,0 +1,247 @@
+@prefix unit: <http://qudt.org/vocab/unit/> .
+
+# FROM FLAVIA
+@prefix bacnet: <http://data.ashrae.org/bacnet/2020#> .
+@prefix bldg: <urn:bldg/> .
+@prefix brick: <https://brickschema.org/schema/Brick#> .
+@prefix ref: <https://brickschema.org/schema/Brick/ref#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+
+bldg:building a brick:Building ;
+brick:hasPart bldg:space .
+
+bldg:space a brick:Space .
+
+bldg:hvacZone a brick:Zone ;
+brick:hasPart bldg:space ; 
+brick:hasPoint bldg:reaTZon_y, bldg:oveTZonSet_u, bldg:lowerSetp, bldg:upperSetp, bldg:occ.
+
+
+# bldg:reaTZon_y a brick:Zone_Air_Temperature_Sensor ; 
+#     ref:hasExternalReference [ bacnet:object-identifier "analog-value,55" ;
+#             bacnet:object-name "reaTZon_y" ;
+#             bacnet:object-type "analog-value" ;
+#             bacnet:objectOf bldg:boptest-proxy-device ] .
+
+
+# bldg:oveTZonSet_u a brick:Zone_Air_Temperature_Setpoint ; 
+#     ref:hasExternalReference [ bacnet:object-identifier "analog-value,55" ;
+#             bacnet:object-name "oveTZonSet_u" ;
+#             bacnet:object-type "analog-value" ;
+#             bacnet:objectOf bldg:boptest-proxy-device ] .
+
+
+# bldg:lowerSetp  a brick:Min_Air_Temperature_Setpoint ;
+#     ref:hasExternalReference [ bacnet:object-identifier "analog-value,55" ;
+#             bacnet:object-name "LowerSetp[1]" ;
+#             bacnet:object-type "analog-value" ;
+#             bacnet:objectOf bldg:boptest-proxy-device ] .
+
+
+# bldg:upperSetp a brick:Max_Air_Temperature_Setpoint ;
+#     ref:hasExternalReference [ bacnet:object-identifier "analog-value,55" ;
+#             bacnet:object-name "UpperSetp[1]" ;
+#             bacnet:object-type "analog-value" ;
+#             bacnet:objectOf bldg:boptest-proxy-device ] .
+
+
+# bldg:occ a brick:Occupancy_Sensor ;
+#     ref:hasExternalReference [ bacnet:object-identifier "analog-value,55" ;
+#             bacnet:object-name "Occupancy[1]" ;
+#             bacnet:object-type "analog-value" ;
+#             bacnet:objectOf bldg:boptest-proxy-device ] .
+
+# From EPAULSON
+bldg:oveTZonSet_u a brick:Zone_Air_Heating_Temperature_Setpoint ;
+    bacnet:description "Zone temperature set point for heating" ;
+    ref:hasExternalReference bldg:oveTZonSet_u_bacnet .
+
+bldg:oveTSupSet_u a brick:Supply_Air_Temperature_Setpoint ;
+    bacnet:description "AHU supply air tempeature set point for heating" ;
+    ref:hasExternalReference bldg:oveTSupSet_bacnet .
+
+bldg:ahu_oveFanSup_u a brick:Run_Enable_Command ;
+    bacnet:description "AHU supply far speed control signal" ;
+    ref:hasExternalReference bldg:ahu_oveFanSup_u .
+
+#measurements
+bldg:ahu_reaTSupAir_y a brick:Supply_Air_Temperature_Sensor ;
+    brick:hasUnit unit:K ;
+    bacnet:description "AHU supply air temperature" ;
+    ref:hasExternalReference bldg:ahu_reaTSupAir_bacnet .
+
+bldg:reaTZon_y a brick:Zone_Air_Temperature_Sensor ;
+    brick:hasUnit unit:K ;
+    bacnet:description "Zone air temperature" ;
+    ref:hasExternalReference bldg:reaTZon_y_bacnet .
+
+bldg:ahu_reaTRetAir_y a brick:Return_Air_Temperature_Sensor ;
+    brick:hasUnit unit:K ;
+    bacnet:description "AHU return air temperature" ;
+    ref:hasExternalReference bldg:ahu_reaTRetAir_y_bacnet .
+
+bldg:reaCO2Zon_y a brick:CO2_Level_Sensor ;
+    brick:hasUnit unit:PPM ;
+    bacnet:description "Zone CO2 concentration" ;
+    ref:hasExternalReference bldg:reaCO2Zon_y_bacnet .
+
+bldg:reaPEle_y a brick:Electrical_Power_Sensor ;
+    brick:hasUnit unit:W ;
+    bacnet:description "Electrical power consumpution for AHU fans and heating system pump" ;
+    ref:hasExternalReference bldg:reaPEle_y_bacnet .
+
+bldg:ahu_reaPFanSup_y a brick:Electrical_Power_Sensor ;
+    brick:hasUnit unit:W ;
+    bacnet:description "AHU supply fan electrical power consumption" ;
+    ref:hasExternalReference bldg:ahu_reaPFanSup_y_bacnet .
+
+bldg:reaPPum_y a brick:Electrical_Power_Sensor ;
+    brick:hasUnit unit:W ;
+    bacnet:description "Electical Power consumption of pump"; 
+    ref:hasExternalReference bldg:reaPPum_y_bacnet .
+
+
+bldg:ahu_reaPFanRet_y a brick:Electrical_Power_Sensor ;
+    brick:hasUnit unit:W ;
+    bacnet:description "AHU return fan electrical consumption" ;
+    ref:hasExternalReference bldg:ahu_reaPFanRet_y_bacnet .
+
+bldg:reaQHea_y a brick:Thermal_Power_Sensor ;
+    brick:hasUnit unit:W ;
+    bacnet:description "District heating thermal power consumption" ;
+    ref:hasExternalReference bldg:reaQHea_y_bacnet .
+
+bldg:ahu_reaFloSupAir_y a brick:Supply_Air_Flow_Sensor ;
+    bacnet:description "AHU supply air mass flowrate" ;
+    ref:hasExternalReference bldg:ahu_reaFloSupAir_y_bacnet .
+
+
+bldg:boptest-proxy a bacnet:BACnetDevice ;
+    bacnet:device-instance 599 .
+
+bldg:oveTZonSet_u_bacnet a ref:BACnetReference ;
+    bacnet:description "Zone temperature set point for heating" ;
+    bacnet:object-type "analog-value" ;
+    bacnet:object-identifier "analog-value,1" ;
+    bacnet:object-name "oveTZonSet_u" ;
+    bacnet:units "degreesKelvin" ;
+    bldg:isWriteable true ;
+    bacnet:objectOf bldg:boptest-proxy .
+
+bldg:oveTZonSet_activate_bacnet a ref:BACnetReference ;
+    bacnet:description "Activation for Zone temperature set point for heating";
+    bacnet:object-type "analog-value" ;
+    bacnet:object-identifier "analog-value,101" ;
+    bacnet:object-name "oveTZonSet_activate" ;
+    bldg:isWriteable true ;
+    bacnet:objectOf bldg:boptest-proxy .
+
+bldg:oveTSupSet_u_bacnet a ref:BACnetReference ;
+    bacnet:object-type "analog-value" ;
+    bacnet:object-identifier "analog-value,2" ;
+    bacnet:object-name "oveTSupSet_u" ;
+    bacnet:units "degreesKelvin" ;
+    bldg:isWriteable true ;
+    bacnet:objectOf bldg:boptest-proxy .
+
+bldg:oveTSupSet_activate_bacnet a ref:BACnetReference ;
+    bacnet:object-type "analog-value" ;
+    bacnet:object-identifier "analog-value,102" ;
+    bacnet:object-name "oveTSupSet_activate" ;
+    bldg:isWriteable true ;
+    bacnet:objectOf bldg:boptest-proxy .
+
+bldg:ahu_oveFanSup_u_bacnet a ref:BACnetReference ;
+    bacnet:object-type "analog-value" ;
+    bacnet:object-identifier "analog-value,3" ;
+    bacnet:object-name "ahu_oveFanSup_u" ;
+    bldg:isWriteable true ;
+    bacnet:objectOf bldg:boptest-proxy .
+
+bldg:ahu_oveFanSup_activate_bacnet a ref:BACnetReference ;
+    bacnet:object-type "analog-value" ;
+    bacnet:object-identifier "analog-value,103" ;
+    bacnet:object-name "ahu_oveFanSup_activate" ;
+    bldg:isWriteable true ;
+    bacnet:objectOf bldg:boptest-proxy .
+
+# measurements 
+bldg:ahu_reaTSupAir_y_bacnet a ref:BACnetReference ;
+    bacnet:object-type "analog-value" ;
+    bacnet:object-identifier "analog-value,10" ;
+    bacnet:object-name "ahu_reaTSupAir_y" ;
+    bacnet:units "degreesKelvin" ;
+    bacnet:objectOf bldg:boptest-proxy .
+
+bldg:reaTZon_y_bacnet a ref:BACnetReference ;
+    bacnet:description "Zone air temperature" ;
+    bacnet:object-type "analog-value" ;
+    bacnet:object-identifier "analog-value,11" ;
+    bacnet:object-name "reaTZon_y" ;
+    bacnet:units "degreesKelvin" ;
+    bacnet:objectOf bldg:boptest-proxy .
+
+bldg:ahu_reaTRetAir_y_bacnet a ref:BACnetReference ;
+    bacnet:description "AHU return air temperature" ;
+    bacnet:object-type "analog-value" ;
+    bacnet:object-identifier "analog-value,12" ;
+    bacnet:object-name "ahu_reaTRetAir_y" ;
+    bacnet:units "degreesKelvin" ;
+    bacnet:objectOf bldg:boptest-proxy .
+
+bldg:reaCO2Zon_y_bacnet a ref:BACnetReference ;
+    bacnet:description "Zone CO2 concentration" ;
+    bacnet:object-type "analog-value" ;
+    bacnet:object-identifier "analog-value,13" ;
+    bacnet:object-name "reaCO2Zon_y" ;
+    bacnet:units "partsPerMillion" ;
+    bacnet:objectOf bldg:boptest-proxy .
+
+bldg:reaPEle_y_bacnet a ref:BACnetReference ;
+    bacnet:description "Electrical power consumpution for AHU fans and heating system pump" ;
+    bacnet:object-type "analog-value" ;
+    bacnet:object-identifier "analog-value,14" ;
+    bacnet:object-name "reaPEle_y" ;
+    bacnet:units "watts" ;
+    bacnet:objectOf bldg:boptest-proxy .
+
+bldg:ahu_reaPFanSup_y_bacnet a ref:BACnetReference ;
+    bacnet:description "AHU supply fan electrical power consumption" ;
+    bacnet:object-type "analog-value" ;
+    bacnet:object-identifier "analog-value,15" ;
+    bacnet:object-name "ahu_reaPFanSup_y" ;
+    bacnet:units "watts" ;
+    bacnet:objectOf bldg:boptest-proxy .
+
+bldg:reaPPum_y_bacnet a ref:BACnetReference ;
+    bacnet:description "Electical Power consumption of pump" ;
+    bacnet:object-type "analog-value" ;
+    bacnet:object-identifier "analog-value,16" ;
+    bacnet:object-name "reaPPum_y" ;
+    bacnet:units "watts" ;
+    bacnet:objectOf bldg:boptest-proxy .
+
+bldg:ahu_reaPFanRet_y_bacnet a ref:BACnetReference ;
+    bacnet:description "AHU return fan electrical consumption" ;
+    bacnet:object-type "analog-value" ;
+    bacnet:object-identifier "analog-value,17" ;
+    bacnet:object-name "ahu_reaPFanRet_y" ;
+    bacnet:units "watts" ;
+    bacnet:objectOf bldg:boptest-proxy .
+
+bldg:reaQHea_y_bacnet a ref:BACnetReference ;
+    bacnet:description "District heating thermal power consumption" ;
+    bacnet:object-type "analog-value" ;
+    bacnet:object-identifier "analog-value,18" ;
+    bacnet:object-name "reaQHea_y" ;
+    bacnet:units "watts" ;
+    bacnet:objectOf bldg:boptest-proxy .
+
+bldg:ahu_reaFloSupAir_y_bacnet a ref:BACnetReference ;
+    bacnet:description "AHU supply air mass flowrate" ;
+    bacnet:object-type "analog-value" ;
+    bacnet:object-identifier "analog-value,19" ;
+    bacnet:object-name "ahu_reaFloSupAir_y" ;
+    bacnet:units "kilogramsPerSecond" ;
+    bacnet:objectOf bldg:boptest-proxy .

@@ -1,0 +1,3 @@
+subjectURI,relation,objectURI
+building, hasPart, space
+hvacZone hasPart, space
