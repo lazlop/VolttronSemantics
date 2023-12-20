@@ -1,0 +1,545 @@
+@prefix bacnet: <http://data.ashrae.org/bacnet/2020#> .
+@prefix bldg: <urn:bldg/> .
+@prefix brick: <https://brickschema.org/schema/Brick#> .
+@prefix quantitykind: <http://qudt.org/vocab/quantitykind/> .
+@prefix qudt: <http://qudt.org/schema/qudt/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ref: <https://brickschema.org/schema/Brick/ref#> .
+@prefix s223: <http://data.ashrae.org/standard223#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+bldg:Building a brick:Building ;
+    brick:hasPart bldg:hvac_cor_zone,
+        bldg:hvac_eas_zone,
+        bldg:hvac_nor_zone,
+        bldg:hvac_sou_zone,
+        bldg:hvac_wes_zone .
+
+bldg:LowerSetp_cor_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-value,21" ;
+    bacnet:object-name "LowerSetp_cor" ;
+    bacnet:object-type "analog-value" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "K" .
+
+bldg:LowerSetp_eas_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-value,22" ;
+    bacnet:object-name "LowerSetp_eas" ;
+    bacnet:object-type "analog-value" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "K" .
+
+bldg:LowerSetp_nor_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-value,23" ;
+    bacnet:object-name "LowerSetp_nor" ;
+    bacnet:object-type "analog-value" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "K" .
+
+bldg:LowerSetp_sou_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-value,24" ;
+    bacnet:object-name "LowerSetp_sou" ;
+    bacnet:object-type "analog-value" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "K" .
+
+bldg:LowerSetp_wes_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-value,20" ;
+    bacnet:object-name "LowerSetp_wes" ;
+    bacnet:object-type "analog-value" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "K" .
+
+bldg:UpperSetp_cor_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-value,26" ;
+    bacnet:object-name "UpperSetp_cor" ;
+    bacnet:object-type "analog-value" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "K" .
+
+bldg:UpperSetp_eas_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-value,27" ;
+    bacnet:object-name "UpperSetp_eas" ;
+    bacnet:object-type "analog-value" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "K" .
+
+bldg:UpperSetp_nor_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-value,28" ;
+    bacnet:object-name "UpperSetp_nor" ;
+    bacnet:object-type "analog-value" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "K" .
+
+bldg:UpperSetp_sou_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-value,29" ;
+    bacnet:object-name "UpperSetp_sou" ;
+    bacnet:object-type "analog-value" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "K" .
+
+bldg:UpperSetp_wes_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-value,25" ;
+    bacnet:object-name "UpperSetp_wes" ;
+    bacnet:object-type "analog-value" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "K" .
+
+bldg:hvac_oveZonSupCor_TZonCooSet_u_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-output,0" ;
+    bacnet:object-name "hvac_oveZonSupCor_TZonCooSet_u" ;
+    bacnet:object-type "analog-output" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "K" .
+
+bldg:hvac_oveZonSupCor_TZonHeaSet_u_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-output,1" ;
+    bacnet:object-name "hvac_oveZonSupCor_TZonHeaSet_u" ;
+    bacnet:object-type "analog-output" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "K" .
+
+bldg:hvac_oveZonSupEas_TZonCooSet_u_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-output,2" ;
+    bacnet:object-name "hvac_oveZonSupEas_TZonCooSet_u" ;
+    bacnet:object-type "analog-output" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "K" .
+
+bldg:hvac_oveZonSupEas_TZonHeaSet_u_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-output,3" ;
+    bacnet:object-name "hvac_oveZonSupEas_TZonHeaSet_u" ;
+    bacnet:object-type "analog-output" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "K" .
+
+bldg:hvac_oveZonSupNor_TZonCooSet_u_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-output,4" ;
+    bacnet:object-name "hvac_oveZonSupNor_TZonCooSet_u" ;
+    bacnet:object-type "analog-output" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "K" .
+
+bldg:hvac_oveZonSupNor_TZonHeaSet_u_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-output,5" ;
+    bacnet:object-name "hvac_oveZonSupNor_TZonHeaSet_u" ;
+    bacnet:object-type "analog-output" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "K" .
+
+bldg:hvac_oveZonSupSou_TZonCooSet_u_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-output,6" ;
+    bacnet:object-name "hvac_oveZonSupSou_TZonCooSet_u" ;
+    bacnet:object-type "analog-output" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "K" .
+
+bldg:hvac_oveZonSupSou_TZonHeaSet_u_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-output,7" ;
+    bacnet:object-name "hvac_oveZonSupSou_TZonHeaSet_u" ;
+    bacnet:object-type "analog-output" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "K" .
+
+bldg:hvac_oveZonSupWes_TZonCooSet_u_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-output,8" ;
+    bacnet:object-name "hvac_oveZonSupWes_TZonCooSet_u" ;
+    bacnet:object-type "analog-output" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "K" .
+
+bldg:hvac_oveZonSupWes_TZonHeaSet_u_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-output,9" ;
+    bacnet:object-name "hvac_oveZonSupWes_TZonHeaSet_u" ;
+    bacnet:object-type "analog-output" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "K" .
+
+bldg:hvac_reaZonCor_TZon_y a s223:QuantifiableObservableProperty ;
+    rdfs:label "hvac_reaZonCor_TZon_y" ;
+    s223:hasSetpoint bldg:hvac_oveZonSupCor_TZonCooSet_u,
+        bldg:hvac_oveZonSupCor_TZonHeaSet_u ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit qudt:K ;
+    brick:hasLocation bldg:hvac_cor_zone ;
+    ref:hasExternalReference bldg:hvac_reaZonCor_TZon_y_bacnet .
+
+bldg:hvac_reaZonCor_TZon_y_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-input,11" ;
+    bacnet:object-name "hvac_reaZonCor_TZon_y" ;
+    bacnet:object-type "analog-input" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "K" .
+
+bldg:hvac_reaZonEas_TZon_y a s223:QuantifiableObservableProperty ;
+    rdfs:label "hvac_reaZonEas_TZon_y" ;
+    s223:hasSetpoint bldg:hvac_oveZonSupEas_TZonCooSet_u,
+        bldg:hvac_oveZonSupEas_TZonHeaSet_u ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit qudt:K ;
+    brick:hasLocation bldg:hvac_eas_zone ;
+    ref:hasExternalReference bldg:hvac_reaZonEas_TZon_y_bacnet .
+
+bldg:hvac_reaZonEas_TZon_y_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-input,12" ;
+    bacnet:object-name "hvac_reaZonEas_TZon_y" ;
+    bacnet:object-type "analog-input" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "K" .
+
+bldg:hvac_reaZonNor_TZon_y a s223:QuantifiableObservableProperty ;
+    rdfs:label "hvac_reaZonNor_TZon_y" ;
+    s223:hasSetpoint bldg:hvac_oveZonSupNor_TZonCooSet_u,
+        bldg:hvac_oveZonSupNor_TZonHeaSet_u ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit qudt:K ;
+    brick:hasLocation bldg:hvac_nor_zone ;
+    ref:hasExternalReference bldg:hvac_reaZonNor_TZon_y_bacnet .
+
+bldg:hvac_reaZonNor_TZon_y_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-input,13" ;
+    bacnet:object-name "hvac_reaZonNor_TZon_y" ;
+    bacnet:object-type "analog-input" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "K" .
+
+bldg:hvac_reaZonSou_TZon_y a s223:QuantifiableObservableProperty ;
+    rdfs:label "hvac_reaZonSou_TZon_y" ;
+    s223:hasSetpoint bldg:hvac_oveZonSupSou_TZonCooSet_u,
+        bldg:hvac_oveZonSupSou_TZonHeaSet_u ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit qudt:K ;
+    brick:hasLocation bldg:hvac_sou_zone ;
+    ref:hasExternalReference bldg:hvac_reaZonSou_TZon_y_bacnet .
+
+bldg:hvac_reaZonSou_TZon_y_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-input,14" ;
+    bacnet:object-name "hvac_reaZonSou_TZon_y" ;
+    bacnet:object-type "analog-input" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "K" .
+
+bldg:hvac_reaZonWes_TZon_y a s223:QuantifiableObservableProperty ;
+    rdfs:label "hvac_reaZonWes_TZon_y" ;
+    s223:hasSetpoint bldg:hvac_oveZonSupWes_TZonCooSet_u,
+        bldg:hvac_oveZonSupWes_TZonHeaSet_u ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit qudt:K ;
+    brick:hasLocation bldg:hvac_wes_zone ;
+    ref:hasExternalReference bldg:hvac_reaZonWes_TZon_y_bacnet .
+
+bldg:hvac_reaZonWes_TZon_y_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-input,10" ;
+    bacnet:object-name "hvac_reaZonWes_TZon_y" ;
+    bacnet:object-type "analog-input" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "K" .
+
+bldg:occ_cor a s223:QuantifiableObservableProperty ;
+    rdfs:label "Occupancy[cor]" ;
+    s223:hasAspect s223:EnumerationKind-Occupancy ;
+    qudt:hasQuantityKind quantitykind:Population ;
+    qudt:hasUnit qudt:NUM ;
+    ref:hasExternalReference bldg:occ_cor_bacnet .
+
+bldg:occ_cor_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-input,16" ;
+    bacnet:object-name "occ_cor" ;
+    bacnet:object-type "analog-input" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "NUM" .
+
+bldg:occ_eas a s223:QuantifiableObservableProperty ;
+    rdfs:label "Occupancy[eas]" ;
+    s223:hasAspect s223:EnumerationKind-Occupancy ;
+    qudt:hasQuantityKind quantitykind:Population ;
+    qudt:hasUnit qudt:NUM ;
+    ref:hasExternalReference bldg:occ_eas_bacnet .
+
+bldg:occ_eas_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-input,17" ;
+    bacnet:object-name "occ_eas" ;
+    bacnet:object-type "analog-input" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "NUM" .
+
+bldg:occ_nor a s223:QuantifiableObservableProperty ;
+    rdfs:label "Occupancy[nor]" ;
+    s223:hasAspect s223:EnumerationKind-Occupancy ;
+    qudt:hasQuantityKind quantitykind:Population ;
+    qudt:hasUnit qudt:NUM ;
+    ref:hasExternalReference bldg:occ_nor_bacnet .
+
+bldg:occ_nor_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-input,18" ;
+    bacnet:object-name "occ_nor" ;
+    bacnet:object-type "analog-input" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "NUM" .
+
+bldg:occ_sou a s223:QuantifiableObservableProperty ;
+    rdfs:label "Occupancy[sou]" ;
+    s223:hasAspect s223:EnumerationKind-Occupancy ;
+    qudt:hasQuantityKind quantitykind:Population ;
+    qudt:hasUnit qudt:NUM ;
+    ref:hasExternalReference bldg:occ_sou_bacnet .
+
+bldg:occ_sou_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-input,19" ;
+    bacnet:object-name "occ_sou" ;
+    bacnet:object-type "analog-input" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "NUM" .
+
+bldg:occ_wes a s223:QuantifiableObservableProperty ;
+    rdfs:label "Occupancy[wes]" ;
+    s223:hasAspect s223:EnumerationKind-Occupancy ;
+    qudt:hasQuantityKind quantitykind:Population ;
+    qudt:hasUnit qudt:NUM ;
+    ref:hasExternalReference bldg:occ_wes_bacnet .
+
+bldg:occ_wes_bacnet a ref:BACnetReference ;
+    bacnet:object-identifier "analog-input,15" ;
+    bacnet:object-name "occ_wes" ;
+    bacnet:object-type "analog-input" ;
+    bacnet:objectOf bldg:boptest-proxy ;
+    bacnet:units "NUM" .
+
+bldg:hvac_oveZonSupCor_TZonCooSet_u a s223:QuantifiableActuatableProperty ;
+    rdfs:label "hvac_oveZonSupCor_TZonCooSet_u" ;
+    s223:hasAspect s223:Aspect-Setpoint,
+        s223:Role-Cooling ;
+    s223:hasProperty bldg:LowerSetp_cor,
+        bldg:UpperSetp_cor ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit qudt:K ;
+    brick:hasLocation bldg:hvac_cor_zone ;
+    ref:hasExternalReference bldg:hvac_oveZonSupCor_TZonCooSet_u_bacnet .
+
+bldg:hvac_oveZonSupCor_TZonHeaSet_u a s223:QuantifiableActuatableProperty ;
+    rdfs:label "hvac_oveZonSupCor_TZonHeaSet_u" ;
+    s223:hasAspect s223:Aspect-Setpoint,
+        s223:Role-Heating ;
+    s223:hasProperty bldg:LowerSetp_cor,
+        bldg:UpperSetp_cor ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit qudt:K ;
+    brick:hasLocation bldg:hvac_cor_zone ;
+    ref:hasExternalReference bldg:hvac_oveZonSupCor_TZonHeaSet_u_bacnet .
+
+bldg:hvac_oveZonSupEas_TZonCooSet_u a s223:QuantifiableActuatableProperty ;
+    rdfs:label "hvac_oveZonSupEas_TZonCooSet_u" ;
+    s223:hasAspect s223:Aspect-Setpoint,
+        s223:Role-Cooling ;
+    s223:hasProperty bldg:LowerSetp_eas,
+        bldg:UpperSetp_eas ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit qudt:K ;
+    brick:hasLocation bldg:hvac_eas_zone ;
+    ref:hasExternalReference bldg:hvac_oveZonSupEas_TZonCooSet_u_bacnet .
+
+bldg:hvac_oveZonSupEas_TZonHeaSet_u a s223:QuantifiableActuatableProperty ;
+    rdfs:label "hvac_oveZonSupEas_TZonHeaSet_u" ;
+    s223:hasAspect s223:Aspect-Setpoint,
+        s223:Role-Heating ;
+    s223:hasProperty bldg:LowerSetp_eas,
+        bldg:UpperSetp_eas ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit qudt:K ;
+    brick:hasLocation bldg:hvac_eas_zone ;
+    ref:hasExternalReference bldg:hvac_oveZonSupEas_TZonHeaSet_u_bacnet .
+
+bldg:hvac_oveZonSupNor_TZonCooSet_u a s223:QuantifiableActuatableProperty ;
+    rdfs:label "hvac_oveZonSupNor_TZonCooSet_u" ;
+    s223:hasAspect s223:Aspect-Setpoint,
+        s223:Role-Cooling ;
+    s223:hasProperty bldg:LowerSetp_nor,
+        bldg:UpperSetp_nor ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit qudt:K ;
+    brick:hasLocation bldg:hvac_nor_zone ;
+    ref:hasExternalReference bldg:hvac_oveZonSupNor_TZonCooSet_u_bacnet .
+
+bldg:hvac_oveZonSupNor_TZonHeaSet_u a s223:QuantifiableActuatableProperty ;
+    rdfs:label "hvac_oveZonSupNor_TZonHeaSet_u" ;
+    s223:hasAspect s223:Aspect-Setpoint,
+        s223:Role-Heating ;
+    s223:hasProperty bldg:LowerSetp_nor,
+        bldg:UpperSetp_nor ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit qudt:K ;
+    brick:hasLocation bldg:hvac_nor_zone ;
+    ref:hasExternalReference bldg:hvac_oveZonSupNor_TZonHeaSet_u_bacnet .
+
+bldg:hvac_oveZonSupSou_TZonCooSet_u a s223:QuantifiableActuatableProperty ;
+    rdfs:label "hvac_oveZonSupSou_TZonCooSet_u" ;
+    s223:hasAspect s223:Aspect-Setpoint,
+        s223:Role-Cooling ;
+    s223:hasProperty bldg:LowerSetp_sou,
+        bldg:UpperSetp_sou ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit qudt:K ;
+    brick:hasLocation bldg:hvac_sou_zone ;
+    ref:hasExternalReference bldg:hvac_oveZonSupSou_TZonCooSet_u_bacnet .
+
+bldg:hvac_oveZonSupSou_TZonHeaSet_u a s223:QuantifiableActuatableProperty ;
+    rdfs:label "hvac_oveZonSupSou_TZonHeaSet_u" ;
+    s223:hasAspect s223:Aspect-Setpoint,
+        s223:Role-Heating ;
+    s223:hasProperty bldg:LowerSetp_sou,
+        bldg:UpperSetp_sou ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit qudt:K ;
+    brick:hasLocation bldg:hvac_sou_zone ;
+    ref:hasExternalReference bldg:hvac_oveZonSupSou_TZonHeaSet_u_bacnet .
+
+bldg:hvac_oveZonSupWes_TZonCooSet_u a s223:QuantifiableActuatableProperty ;
+    rdfs:label "hvac_oveZonSupWes_TZonCooSet_u" ;
+    s223:hasAspect s223:Aspect-Setpoint,
+        s223:Role-Cooling ;
+    s223:hasProperty bldg:LowerSetp_wes,
+        bldg:UpperSetp_wes ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit qudt:K ;
+    brick:hasLocation bldg:hvac_wes_zone ;
+    ref:hasExternalReference bldg:hvac_oveZonSupWes_TZonCooSet_u_bacnet .
+
+bldg:hvac_oveZonSupWes_TZonHeaSet_u a s223:QuantifiableActuatableProperty ;
+    rdfs:label "hvac_oveZonSupWes_TZonHeaSet_u" ;
+    s223:hasAspect s223:Aspect-Setpoint,
+        s223:Role-Heating ;
+    s223:hasProperty bldg:LowerSetp_wes,
+        bldg:UpperSetp_wes ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit qudt:K ;
+    brick:hasLocation bldg:hvac_wes_zone ;
+    ref:hasExternalReference bldg:hvac_oveZonSupWes_TZonHeaSet_u_bacnet .
+
+bldg:LowerSetp_cor a s223:QuantifiableProperty ;
+    rdfs:label "LowerSetp[cor]" ;
+    s223:hasAspect s223:Aspect-Minimum ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit qudt:K ;
+    brick:hasLocation bldg:hvac_cor_zone ;
+    ref:hasExternalReference bldg:LowerSetp_cor_bacnet .
+
+bldg:LowerSetp_eas a s223:QuantifiableProperty ;
+    rdfs:label "LowerSetp[eas]" ;
+    s223:hasAspect s223:Aspect-Minimum ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit qudt:K ;
+    brick:hasLocation bldg:hvac_eas_zone ;
+    ref:hasExternalReference bldg:LowerSetp_eas_bacnet .
+
+bldg:LowerSetp_nor a s223:QuantifiableProperty ;
+    rdfs:label "LowerSetp[nor]" ;
+    s223:hasAspect s223:Aspect-Minimum ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit qudt:K ;
+    brick:hasLocation bldg:hvac_nor_zone ;
+    ref:hasExternalReference bldg:LowerSetp_nor_bacnet .
+
+bldg:LowerSetp_sou a s223:QuantifiableProperty ;
+    rdfs:label "LowerSetp[sou]" ;
+    s223:hasAspect s223:Aspect-Minimum ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit qudt:K ;
+    brick:hasLocation bldg:hvac_sou_zone ;
+    ref:hasExternalReference bldg:LowerSetp_sou_bacnet .
+
+bldg:LowerSetp_wes a s223:QuantifiableProperty ;
+    rdfs:label "LowerSetp[wes]" ;
+    s223:hasAspect s223:Aspect-Minimum ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit qudt:K ;
+    brick:hasLocation bldg:hvac_wes_zone ;
+    ref:hasExternalReference bldg:LowerSetp_wes_bacnet .
+
+bldg:UpperSetp_cor a s223:QuantifiableProperty ;
+    rdfs:label "UpperSetp[cor]" ;
+    s223:hasAspect s223:Aspect-Maximum ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit qudt:K ;
+    brick:hasLocation bldg:hvac_cor_zone ;
+    ref:hasExternalReference bldg:UpperSetp_cor_bacnet .
+
+bldg:UpperSetp_eas a s223:QuantifiableProperty ;
+    rdfs:label "UpperSetp[eas]" ;
+    s223:hasAspect s223:Aspect-Maximum ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit qudt:K ;
+    brick:hasLocation bldg:hvac_eas_zone ;
+    ref:hasExternalReference bldg:UpperSetp_eas_bacnet .
+
+bldg:UpperSetp_nor a s223:QuantifiableProperty ;
+    rdfs:label "UpperSetp[nor]" ;
+    s223:hasAspect s223:Aspect-Maximum ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit qudt:K ;
+    brick:hasLocation bldg:hvac_nor_zone ;
+    ref:hasExternalReference bldg:UpperSetp_nor_bacnet .
+
+bldg:UpperSetp_sou a s223:QuantifiableProperty ;
+    rdfs:label "UpperSetp[sou]" ;
+    s223:hasAspect s223:Aspect-Maximum ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit qudt:K ;
+    brick:hasLocation bldg:hvac_sou_zone ;
+    ref:hasExternalReference bldg:UpperSetp_sou_bacnet .
+
+bldg:UpperSetp_wes a s223:QuantifiableProperty ;
+    rdfs:label "UpperSetp[wes]" ;
+    s223:hasAspect s223:Aspect-Maximum ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit qudt:K ;
+    brick:hasLocation bldg:hvac_wes_zone ;
+    ref:hasExternalReference bldg:UpperSetp_wes_bacnet .
+
+bldg:hvac_cor_zone a s223:DomainSpace ;
+    s223:hasDomain s223:Domain-HVAC ;
+    s223:hasProperty bldg:LowerSetp_cor,
+        bldg:UpperSetp_cor,
+        bldg:hvac_oveZonSupCor_TZonCooSet_u,
+        bldg:hvac_oveZonSupCor_TZonHeaSet_u,
+        bldg:hvac_reaZonCor_TZon_y,
+        bldg:occ_cor .
+
+bldg:hvac_eas_zone a s223:DomainSpace ;
+    s223:hasDomain s223:Domain-HVAC ;
+    s223:hasProperty bldg:LowerSetp_eas,
+        bldg:UpperSetp_eas,
+        bldg:hvac_oveZonSupEas_TZonCooSet_u,
+        bldg:hvac_oveZonSupEas_TZonHeaSet_u,
+        bldg:hvac_reaZonEas_TZon_y,
+        bldg:occ_eas .
+
+bldg:hvac_nor_zone a s223:DomainSpace ;
+    s223:hasDomain s223:Domain-HVAC ;
+    s223:hasProperty bldg:LowerSetp_nor,
+        bldg:UpperSetp_nor,
+        bldg:hvac_oveZonSupNor_TZonCooSet_u,
+        bldg:hvac_oveZonSupNor_TZonHeaSet_u,
+        bldg:hvac_reaZonNor_TZon_y,
+        bldg:occ_nor .
+
+bldg:hvac_sou_zone a s223:DomainSpace ;
+    s223:hasDomain s223:Domain-HVAC ;
+    brick:hasPoint bldg:LowerSetp_sou,
+        bldg:UpperSetp_sou,
+        bldg:hvac_oveZonSupSou_TZonCooSet_u,
+        bldg:hvac_oveZonSupSou_TZonHeaSet_u,
+        bldg:hvac_reaZonSou_TZon_y,
+        bldg:occ_sou .
+
+bldg:hvac_wes_zone a s223:DomainSpace ;
+    s223:hasDomain s223:Domain-HVAC ;
+    s223:hasProperty bldg:LowerSetp_wes,
+        bldg:UpperSetp_wes,
+        bldg:hvac_oveZonSupWes_TZonCooSet_u,
+        bldg:hvac_oveZonSupWes_TZonHeaSet_u,
+        bldg:hvac_reaZonWes_TZon_y,
+        bldg:occ_wes .
+
+bldg:boptest-proxy a bacnet:BACnetDevice ;
+    bacnet:device-instance 599 .
+
